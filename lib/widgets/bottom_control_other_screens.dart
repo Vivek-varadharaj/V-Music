@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:v_music_player/screens/screen_now_playing.dart';
 import 'package:v_music_player/style/style.dart';
@@ -12,8 +13,8 @@ class BottomControlForOtherScreens extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return assetsAudioPlayer.builderIsPlaying(builder: (context, isPlaying) {
-      return isPlaying
-          ? assetsAudioPlayer.builderCurrent(builder: (context, playing) {
+      return isPlaying ?
+           assetsAudioPlayer.builderCurrent(builder: (context, playing) {
               return GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -26,13 +27,34 @@ class BottomControlForOtherScreens extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                      color: ColorsForApp.golden,
+                      color: ColorsForApp.goldenLow,
                       borderRadius: BorderRadius.circular(8)),
-                  height: 40,
+                  height: 60,
                   child: Center(
-                    child: Text(
-                      "Now Playing",
-                      style: StyleForApp.heading,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Now Playing",
+                          style: StyleForApp.heading,
+                        ),
+                        Icon(FontAwesomeIcons.stepBackward),
+                        assetsAudioPlayer.builderIsPlaying(builder: (context,isPlaying){
+                          return GestureDetector(
+                            onTap: (){
+                              assetsAudioPlayer.stop();
+                            },
+                            child: Container(
+                              child: isPlaying? Icon(FontAwesomeIcons.stop) : Icon(FontAwesomeIcons.play),
+                            ),
+                          );
+                        }),
+                        GestureDetector(
+                          onTap: (){
+                            assetsAudioPlayer.next();
+                          },
+                          child: Icon(FontAwesomeIcons.stepForward)),
+                      ],
                     ),
                   ),
                 ),

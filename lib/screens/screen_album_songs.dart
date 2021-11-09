@@ -21,12 +21,12 @@ class _AlbumSongsScreenState extends State<AlbumSongsScreen> {
 
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
 
-   getSongs() async {
-    myAudioModelSongs = await db.getSongs("All Songs");
-    myAudioModelSongs = await myAudioModelSongs
+   getSongs()  {
+    myAudioModelSongs =  db.getSongs("All Songs");
+    myAudioModelSongs =  myAudioModelSongs
         .where((audioModel) => audioModel.album == widget.albumName)
         .toList();
-    audioSongs = await db.AudioModelToAudio(myAudioModelSongs);
+    audioSongs =  db.AudioModelToAudio(myAudioModelSongs);
     setState(() {});
   }
 

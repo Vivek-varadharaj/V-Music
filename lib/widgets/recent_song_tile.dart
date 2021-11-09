@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:v_music_player/audio_player/player.dart';
+import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_now_playing.dart';
 import 'package:v_music_player/style/style.dart';
-import 'dart:io' as io;
+import 'dart:io' ;
 
 // ignore: must_be_immutable
 class RecentSongTile extends StatelessWidget {
+  
   String? playlistName;
  final Audio? audioModel;
   List <Audio>? audioModelSongs=[];
@@ -26,22 +28,17 @@ class RecentSongTile extends StatelessWidget {
       padding: const EdgeInsets.all(1.5),
       child: GestureDetector(
         onTap:() async{
-          bool isAvailable = await io.File(audioModelSongs![index!].path).exists();
-        if(isAvailable){
-          player.openPlaylistInPlayer(index:index, audioModelSongs: audioModelSongs);
+        
+        try{
+          player.openPlaylistInPlayer(index:index, audioModelSongs: audioModelSongs,context: context, audioModel: audioModel,setStateOfTheScreen: setStateOfTheScreen,playlistName: playlistName);
           Navigator.push(
               context,
               PageTransition(
                 duration: Duration(milliseconds: 500),
                   type: PageTransitionType.fade,
                   child: NowPlaying(audioModelSongs!, index!)));
-        }  else{
-          db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Selected song is not available, Song removed from playlist"),
+        }  catch(e){
           
-        ));
-        setStateOfTheScreen!();
         }
         }
         ,
@@ -90,5 +87,18 @@ class RecentSongTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> isItAvailable()async{
+    
+    
+    File a = File(audioModelSongs![index!].path);
+    print("awaiting ${ await a.exists()}");
+    List<AudioModel> allSongs =  await db.getSongs("All Songs");
+    List<AudioModel> theSong = allSongs.where((element) => element.path==audioModelSongs![index!].path).toList();
+    if(theSong.length>0){
+      return true;
+    }
+    else return false;
   }
 }

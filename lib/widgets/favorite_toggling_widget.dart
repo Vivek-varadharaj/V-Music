@@ -5,50 +5,63 @@ import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 
 class FavoriteToggling extends StatefulWidget {
- final Audio audioModel;
+  Audio? audioModel;
+ List<Audio> audioSongs;
 
-  FavoriteToggling(this.audioModel);
+  FavoriteToggling(this.audioSongs);
 
   @override
   _FavoriteTogglingState createState() => _FavoriteTogglingState();
 }
 
 class _FavoriteTogglingState extends State<FavoriteToggling> {
+  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId("0");
   AudioModel? favorite;
   bool isFavorite = false;
   List<Audio> audioSongs = [];
   List<AudioModel> myAudioModelSongs = [];
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
-  void decideColor() async {
-    myAudioModelSongs = await db.getSongs("Favorites");
+  void decideColor()  {
+    
     favorite = AudioModel(
-        album: widget.audioModel.metas.album,
-        id: widget.audioModel.metas.extra!["id"],
-        path: widget.audioModel.path,
-        title: widget.audioModel.metas.title);
+        album: widget.audioModel!.metas.album,
+        id: widget.audioModel!.metas.extra!["id"],
+        path: widget.audioModel!.path,
+        title: widget.audioModel!.metas.title);
 
     isFavorite = db.isExists(myAudioModelSongs, favorite);
 
-    setState(() {});
+    // setState(() {});
+  }
+  void getSongs()async {
+    myAudioModelSongs = await db.getSongs("Favorites");
   }
 
   @override
   void initState() {
-    
+
+    getSongs();
     super.initState();
-    decideColor();
+    // decideColor();
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+
+    return 
+    assetsAudioPlayer.builderCurrent(builder: (context,playing){
+      print("vivek");
+      
+    widget.audioModel=  find(widget.audioSongs, playing.audio.assetAudioPath);
+    decideColor();
+      return   GestureDetector(
       onTap: () {
         if (isFavorite) {
           myAudioModelSongs.removeWhere(
-              (element) => element.id == widget.audioModel.metas.extra!["id"]);
+              (element) => element.id == widget.audioModel!.metas.extra!["id"]);
           db.insertSongs(myAudioModelSongs, "Favorites");
         } else
-          db.addToPlaylist(
+          db.addToFavorites(
               audioModel: widget.audioModel,
               playlistName: "Favorites",
               context: context);
@@ -59,5 +72,10 @@ class _FavoriteTogglingState extends State<FavoriteToggling> {
       child: Icon(FontAwesomeIcons.heart,
           color: isFavorite ? Colors.red : Colors.white),
     );
+    });
+    
   }
+   Audio find(List<Audio> audioModelSongs, String path) {
+    return audioModelSongs.firstWhere((element) => element.path == path);
+   }
 }

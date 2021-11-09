@@ -24,9 +24,9 @@ class DatabaseFunctions {
 
   // get songs by playlist name
 
-  Future<List<AudioModel>> getSongs(playlistName) async {
+  List<AudioModel> getSongs(playlistName)  {
     final List<AudioModel> audioModelSongs =
-        await allSongsBox!.get(playlistName)!.cast<AudioModel>();
+         allSongsBox!.get(playlistName)!.cast<AudioModel>();
     return audioModelSongs;
   }
 
@@ -61,6 +61,7 @@ class DatabaseFunctions {
                 ),
               ),
               "id": audioModel.id,
+              "duration":audioModel.duration
             }),
           ),
         )
@@ -76,7 +77,8 @@ class DatabaseFunctions {
             path: audioModel.path,
             album: audioModel.metas.album,
             title: audioModel.metas.title,
-            id: audioModel.metas.extra!["id"]))
+            id: audioModel.metas.extra!["id"],
+            duration:audioModel.metas.extra!["duration"]))
         .toList();
   }
 
@@ -99,7 +101,9 @@ class DatabaseFunctions {
         path: audioModel!.path,
         album: audioModel.metas.album,
         title: audioModel.metas.title,
-        id: audioModel.metas.extra!["id"]);
+        id: audioModel.metas.extra!["id"],
+        duration: audioModel.metas.extra!["duration"]
+        );
 
     // getting all songs in the playlist from database
 
@@ -126,6 +130,9 @@ class DatabaseFunctions {
         await allSongsBox!.put(playlistName, playlistSongs);
         
       }
+      if (playlistName == "Favorites"){
+        Navigator.of(context!).pop();
+      }
 
       //  if song is not existent in playlist we simply add the song to list
       // and replace the list in database with current list
@@ -134,7 +141,8 @@ class DatabaseFunctions {
           path: audioModel.path,
           album: audioModel.metas.album,
           title: audioModel.metas.title,
-          id: audioModel.metas.extra!["id"]));
+          id: audioModel.metas.extra!["id"],
+          duration : audioModel.metas.extra!["duration"]));
       await allSongsBox!.put(playlistName, playlistSongs);
 
       // confirms the playlist name is not Recent Songs so that we can avoid
@@ -149,9 +157,11 @@ class DatabaseFunctions {
       // avoids the screen popping issue when we add song to favorites from the
       // playing screen as welll as when adding song to Recent songs from now playing screen
 
-      if (playlistName != "Favorites" && playlistName != "Recent Songs") {
-        Navigator.of(context!).pop();
+      if(playlistName != "Recent Songs"){
+       Navigator.of(context!).pop();
       }
+        
+      
     }
 
     print(await allSongsBox!.get(playlistName));
@@ -234,4 +244,74 @@ class DatabaseFunctions {
     
   }
 
+
+  void addToFavorites(
+      {Audio? audioModel, String? playlistName, BuildContext? context}) async {
+    final DatabaseFunctions dbl = DatabaseFunctions.getDatabase();
+
+    //converting Audio into AudioModel inorder to add to the playlist
+
+    AudioModel myAudioModelSong = AudioModel(
+        path: audioModel!.path,
+        album: audioModel.metas.album,
+        title: audioModel.metas.title,
+        id: audioModel.metas.extra!["id"],
+        duration: audioModel.metas.extra!["duration"]
+        );
+
+    // getting all songs in the playlist from database
+
+    List<AudioModel> playlistSongs = await dbl.getSongs(playlistName);
+
+    // checks the adding song is currently in the playlist or not if exists we dont add else we add.
+
+    if (isExists(playlistSongs, myAudioModelSong)) {
+      // confirms the playlist name is not Recent Songs to avoid showing snackbar
+      // for adding every song that ever played
+
+      if (playlistName != "Recent Songs") {
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text("Song already exists"),
+        ));
+
+        // confirms the playlist name is Recent Songs and deletes the old entry and adds the
+        // new entry.
+
+      } else if (playlistName == "Recent Songs") {
+        playlistSongs
+            .removeWhere((element) => element.id == myAudioModelSong.id);
+            playlistSongs.add(myAudioModelSong);
+        await allSongsBox!.put(playlistName, playlistSongs);
+        
+      }
+
+      //  if song is not existent in playlist we simply add the song to list
+      // and replace the list in database with current list
+    } else {
+      playlistSongs.add(AudioModel(
+          path: audioModel.path,
+          album: audioModel.metas.album,
+          title: audioModel.metas.title,
+          id: audioModel.metas.extra!["id"],
+          duration : audioModel.metas.extra!["duration"]));
+      await allSongsBox!.put(playlistName, playlistSongs);
+
+      // confirms the playlist name is not Recent Songs so that we can avoid
+      // showing snackbar to every song added to the Recent songs
+      //
+      if (playlistName != "Recent Songs") {
+        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text("Song added to '$playlistName'"),
+        ));
+      }
+
+      // avoids the screen popping issue when we add song to favorites from the
+      // playing screen as welll as when adding song to Recent songs from now playing screen
+
+      
+       
+      
+    }
+
+}
 }

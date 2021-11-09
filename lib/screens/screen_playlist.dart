@@ -22,11 +22,10 @@ class _PlayListScreenState extends State<PlayListScreen> {
 
   List<String>? playlistNames = [];
 
-  void getPlaylistNames() async {
-    playlistNames = await allSongsBox!.keys.toList().cast<String>();
+  void getPlaylistNames()  {
+    playlistNames =  allSongsBox!.keys.toList().cast<String>();
     // playlistNames =
     //     playlistNames!.where((element) => element != "Favorites").toList();
-    print(playlistNames);
     setState(() {});
   }
 

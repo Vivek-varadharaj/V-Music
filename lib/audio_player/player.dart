@@ -1,8 +1,13 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/material.dart';
+import 'package:v_music_player/data_base/database_functions.dart';
+import 'package:restart_app/restart_app.dart';
+import 'package:v_music_player/style/style.dart';
 
 class Player{
    AssetsAudioPlayer? assetsAudioPlayer = AssetsAudioPlayer.withId("0");
+   DatabaseFunctions db = DatabaseFunctions.getDatabase();
   
    Player.getAudioPlayer();
   static Player? player;
@@ -16,9 +21,9 @@ class Player{
    }
    
 
-  void openPlaylistInPlayer({int? index,List <Audio>? audioModelSongs}) async {
+  void openPlaylistInPlayer({int? index,List <Audio>? audioModelSongs, BuildContext? context, Audio? audioModel,String? playlistName,Function? setStateOfTheScreen}) async {
     // getsongs();
-
+try{
     await assetsAudioPlayer!.open(
         Playlist(
           audios: audioModelSongs,
@@ -26,6 +31,30 @@ class Player{
         ),
         autoStart: true,
         showNotification: true);
+}catch( e){
+  db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
+           ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+          content: Text("Selected song is not available, Song removed from playlist"),
+          
+          
+        ));
+        setStateOfTheScreen!();
+        Navigator.of(context).pop();
+        if(playlistName=="All Songs"){
+          showDialog(context: context, builder: (context)=>
+          AlertDialog(
+            backgroundColor: ColorsForApp.golden,
+            title: Text("Song Not Found", style: StyleForApp.heading,),
+            content:Text("Fetching the songs again",style: StyleForApp.tileDisc,),
+           
+          )
+          );
+          Future.delayed(Duration(milliseconds: 2000), (){
+            Restart.restartApp();
+          });
+          
+        }
+}
   }
 
   void playNext() async{

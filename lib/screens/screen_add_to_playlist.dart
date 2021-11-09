@@ -1,6 +1,7 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:v_music_player/style/style.dart';
 
 import 'package:v_music_player/widgets/add_to_playlist_tile.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
@@ -18,10 +19,10 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
 
   List<String>? playlistNames=[];
 
- void getPlaylistNames() async {
-    playlistNames = await allSongsBox.keys.toList().cast<String>();
+ void getPlaylistNames()  {
+    playlistNames =  allSongsBox.keys.toList().cast<String>();
     playlistNames =
-        playlistNames!.where((element) => element != "Favorites").toList();
+        playlistNames!.where((element) => element != "Favorites" && element !="All Songs" && element != "Recent Songs").toList();
     print(playlistNames);
     setState(() {});
   }
@@ -37,12 +38,21 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar("Add to playlist"),
-      body: ListView(
-        children: [
-          ...playlistNames!.map((playlistNames) => AddToPlaylistTile(widget.audioModel, playlistNames)).toList()
-        ],
-      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child:  playlistNames!.length>0 ?  ListView(
+          children: 
+          playlistNames!.map((playlistNames) => AddToPlaylistTile(widget.audioModel, playlistNames)).toList() ): Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+        Center(child: Text("No Playlists yet!!",style: StyleForApp.heading,)),
+    ],
+          )
+          ,
+        ),
+   
     );
   }
 }

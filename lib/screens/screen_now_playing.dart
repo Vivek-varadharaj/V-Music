@@ -8,12 +8,20 @@ import 'package:v_music_player/widgets/bottom_control_panel.dart';
 import 'package:v_music_player/widgets/favorite_toggling_widget.dart';
 
 // ignore: must_be_immutable
-class NowPlaying extends StatelessWidget {
-  DatabaseFunctions db = DatabaseFunctions.getDatabase();
-  Audio? nowPlaying;
+class NowPlaying extends StatefulWidget {
  final List<Audio> audioModelSongs;
  final int index;
   NowPlaying(this.audioModelSongs, this.index);
+
+  @override
+  State<NowPlaying> createState() => _NowPlayingState();
+}
+
+class _NowPlayingState extends State<NowPlaying> {
+  DatabaseFunctions db = DatabaseFunctions.getDatabase();
+
+  Audio? nowPlaying;
+
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId("0");
 
   @override
@@ -25,7 +33,7 @@ class NowPlaying extends StatelessWidget {
         padding:
             const EdgeInsets.only(top: 8.0, left: 20, right: 20, bottom: 24),
         child: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
-          nowPlaying = find(audioModelSongs, playing.audio.assetAudioPath);
+          nowPlaying = find(widget.audioModelSongs, playing.audio.assetAudioPath);
           db.addToPlaylist(audioModel: nowPlaying, context: context, playlistName: "Recent Songs");//inserting the song to Recent Songs playlist
 
           return Container(
@@ -76,7 +84,7 @@ class NowPlaying extends StatelessWidget {
                         progress: Duration(
                             milliseconds: infos.currentPosition.inMilliseconds),
                         total: Duration(
-                            milliseconds: infos.duration.inMilliseconds),
+                            milliseconds: nowPlaying!.metas.extra!["duration"]), //infos.duration.inMilliseconds),
                         onSeek: (newPosition) {
                           assetsAudioPlayer.seek(newPosition);
                         },
@@ -96,7 +104,7 @@ class NowPlaying extends StatelessWidget {
                 assetsAudioPlayer.builderCurrent(
                   builder: (context, playing) {
                     final Audio nowPlaying =
-                        find(audioModelSongs, playing.audio.assetAudioPath);
+                        find(widget.audioModelSongs, playing.audio.assetAudioPath);
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -131,7 +139,7 @@ class NowPlaying extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                FavoriteToggling(nowPlaying),
+                                FavoriteToggling(widget.audioModelSongs),
                               ]),
                         ),
                       ),
@@ -149,5 +157,10 @@ class NowPlaying extends StatelessWidget {
 
   Audio find(List<Audio> audioModelSongs, String path) {
     return audioModelSongs.firstWhere((element) => element.path == path);
+  }
+   void setStateOfTheWidget(){
+    setState(() {
+      
+    });
   }
 }

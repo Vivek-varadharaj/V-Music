@@ -66,14 +66,14 @@ class AddToPlaylistTile extends StatelessWidget {
   }
 
   void getPlaylist(context) async{
-  myAudioModelSong = AudioModel(path: audioModel!.path,album: audioModel!.metas.album,title: audioModel!.metas.title,id: audioModel!.metas.extra!["id"]);
+  myAudioModelSong = AudioModel(path: audioModel!.path,album: audioModel!.metas.album,title: audioModel!.metas.title,id: audioModel!.metas.extra!["id"],duration:audioModel!.metas.extra!["duration"]);
  playlistSongs= await db.getSongs(playlistName);
    print(playlistSongs);
    if(isExists()){
      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Song already exists"),));
    }
    else{
-    playlistSongs!.add(AudioModel(path: audioModel!.path,album: audioModel!.metas.album,title: audioModel!.metas.title,id: audioModel!.metas.extra!["id"]));
+    playlistSongs!.add(AudioModel(path: audioModel!.path,album: audioModel!.metas.album,title: audioModel!.metas.title,id: audioModel!.metas.extra!["id"],duration:audioModel!.metas.extra!["duration"]));
    await allSongsBox!.put(playlistName, playlistSongs!);
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Song added to the playlist"),));
    Navigator.of(context).pop();

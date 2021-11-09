@@ -4,13 +4,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:v_music_player/style/style.dart';
 
 class BottomControlPannel extends StatefulWidget {
-  const BottomControlPannel({ Key? key }) : super(key: key);
+
 
   @override
   _BottomControlPannelState createState() => _BottomControlPannelState();
 }
 
 class _BottomControlPannelState extends State<BottomControlPannel> {
+  bool shuffled = false;
+ 
   AssetsAudioPlayer assetsAudioPlayer =AssetsAudioPlayer.withId("0");
   @override
   Widget build(BuildContext context) {
@@ -48,12 +50,23 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
                        GestureDetector(
                          onTap: (){
                            assetsAudioPlayer.next();
+                          
                          },
                          child: Icon(FontAwesomeIcons.stepForward,color: Colors.white,)),
-                      Icon(FontAwesomeIcons.random,color: Colors.white,),
+                      GestureDetector(
+                        onTap:(){
+                          assetsAudioPlayer.shuffle;
+                          
+                          setState(() {
+                            shuffled = !shuffled;
+                          });
+                        } ,
+                        child: shuffled?  Icon(FontAwesomeIcons.random,color: Colors.white,): Icon(FontAwesomeIcons.random,color: Colors.grey,) ),
                     ],
                   ),
                 );
     });
+    
   }
+
 }

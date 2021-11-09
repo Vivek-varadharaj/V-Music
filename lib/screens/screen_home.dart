@@ -1,5 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:v_music_player/style/style.dart';
 
 import 'package:v_music_player/widgets/recent_song_tile.dart';
@@ -16,7 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   bool switchTileView = false;
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,10 +29,26 @@ class _HomeScreenState extends State<HomeScreen> {
           color: ColorsForApp.dark,
           child: Column(
             children: [
-            DrawerHeader(child: Text("V Music", style:StyleForApp.heading ,))  ,
+            DrawerHeader(child: Text("V Music", style:StyleForApp.heading ,),
+            padding: EdgeInsets.all(40),
+            )  ,
               ListTile(
-                title: Text("About",style: StyleForApp.heading,),
-              )
+                
+                title: Text("About",style: StyleForApp.heading,
+               
+                ),
+                 leading:Icon(FontAwesomeIcons.user,color: Colors.white,size: 18,),
+                 trailing: Icon(Icons.forward,color:Colors.white),
+              ),
+
+              ListTile(
+                
+                title: Text("About",style: StyleForApp.heading,
+               
+                ),
+                 leading:Icon(FontAwesomeIcons.user,color: Colors.white,size: 18,),
+                 trailing: Icon(Icons.forward,color:Colors.white),
+              ),
             ],
           ),
         ),
@@ -52,7 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Transform.scale(
             scale: 0.5,
             child: Switch(
-                materialTapTargetSize: MaterialTapTargetSize.padded,
+                
                 inactiveThumbColor: ColorsForApp.golden,
                 activeColor: ColorsForApp.golden,
                 activeTrackColor: ColorsForApp.golden,
@@ -81,6 +101,8 @@ class _HomeScreenState extends State<HomeScreen> {
                            audioModel: e,
                           audioModelSongs:  widget.audioModelSongs,
                            index: widget.audioModelSongs.indexOf(e),
+                           playlistName: "All Songs",
+                           setStateOfTheScreen:setStateOfTheScreen ,
                           ),
                         )
                         .toList(),
@@ -94,8 +116,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisSpacing: 15,
                   children: widget.audioModelSongs
                       .map((e) => SongTile(e, widget.audioModelSongs,
-                          widget.audioModelSongs.indexOf(e)))
+                          widget.audioModelSongs.indexOf(e),))
                       .toList())),
+                  
     );
   }
+void  setStateOfTheScreen(){
+    setState(() {
+      
+    });
+  }
+ 
 }

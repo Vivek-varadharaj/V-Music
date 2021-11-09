@@ -8,9 +8,9 @@ import 'package:v_music_player/widgets/menu_tile.dart';
 import 'package:v_music_player/widgets/recent_song_tile.dart';
 
 class Library extends StatefulWidget {
-  Library(this.recentAudioModels);
+  
 
-  List<Audio> recentAudioModels;
+ 
 
   @override
   State<Library> createState() => _LibraryState();
@@ -25,8 +25,8 @@ class _LibraryState extends State<Library> {
   List<AudioModel> myAudioModelSongs = [];
   List<Audio> audioSongs = [];
 
-  void getRecentSongs() async {
-    myAudioModelSongs = await db.getSongs("Recent Songs");
+  void getRecentSongs()  {
+    myAudioModelSongs =  db.getSongs("Recent Songs");
     audioSongs = db.AudioModelToAudio(myAudioModelSongs);
     setState(() {
       audioSongs = audioSongs.reversed.toList();

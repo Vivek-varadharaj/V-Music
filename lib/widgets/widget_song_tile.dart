@@ -22,13 +22,21 @@ class _SongTileState extends State<SongTile> {
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
 
   Player assetsAudioPlayer = Player.getAudioPlayer();
+  setStateOfTheScreen() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         assetsAudioPlayer.openPlaylistInPlayer(
-            index: widget.index, audioModelSongs: widget.audioModelSongs);
+            index: widget.index,
+            audioModelSongs: widget.audioModelSongs,
+            context: context,
+            audioModel: widget.audioModel,
+            setStateOfTheScreen: setStateOfTheScreen,
+            playlistName: "All Songs");
         Navigator.push(
             context,
             PageTransition(
@@ -67,9 +75,10 @@ class _SongTileState extends State<SongTile> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: ()  {
                         db.addToPlaylistOrFavorites(
                             context: context, audioModel: widget.audioModel);
+                            
                         print("show dialogue");
                       },
                       child: Container(
@@ -94,7 +103,7 @@ class _SongTileState extends State<SongTile> {
                   children: [
                     Expanded(
                       child: Text(
-                       widget.audioModel.metas.album! ,
+                        widget.audioModel.metas.album!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: StyleForApp.tileDisc,
