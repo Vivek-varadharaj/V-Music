@@ -22,6 +22,10 @@ class DatabaseFunctions {
     return db!;
   }
 
+  void deleteKey(String key){
+    allSongsBox!.delete(key);
+  }
+
   // get songs by playlist name
 
   List<AudioModel> getSongs(playlistName)  {

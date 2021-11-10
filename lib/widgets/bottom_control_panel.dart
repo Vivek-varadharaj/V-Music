@@ -42,7 +42,7 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
                        onTap: (){
                          assetsAudioPlayer.pause();
                        },
-                       child: Icon(FontAwesomeIcons.stop,color: Colors.white,)) : GestureDetector(
+                       child: Icon(FontAwesomeIcons.pause,color: Colors.white,)) : GestureDetector(
                          onTap: (){
                            assetsAudioPlayer.play();
                          },

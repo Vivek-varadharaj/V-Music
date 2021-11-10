@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:v_music_player/data_base/audio_model.dart';
+import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_playlist_songs.dart';
 import 'package:v_music_player/style/style.dart';
 
 class PlaylistTile extends StatelessWidget {
+  TextEditingController controller = TextEditingController();
+  DatabaseFunctions db = DatabaseFunctions.getDatabase();
+  
   final Box<List<dynamic>>? allSongsBox = Hive.box("allSongsBox");
   final Function setStateOfPlaylistScreen;
   PlaylistTile(this.title, this.setStateOfPlaylistScreen);
- final String title;
+   
+  final String title;
   @override
   Widget build(BuildContext context) {
+    controller.text=title;
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -22,7 +29,9 @@ class PlaylistTile extends StatelessWidget {
                     title))); //Actually we will be passing the entire song list model here
       },
       onLongPress: () {
-        if (title != "Favorites" && title != "All Songs" && title != "Recent Songs") {
+        if (title != "Favorites" &&
+            title != "All Songs" &&
+            title != "Recent Songs") {
           allSongsBox!.delete(title);
           setStateOfPlaylistScreen();
           print("Deleted Playlist");
@@ -62,16 +71,122 @@ class PlaylistTile extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(right: 15.0),
                 child: Container(
-                    child: (title != "Favorites")
+                    child: (title == "Favorites" ||
+                                title == "All Songs" ||
+                                title == "Favorites") ||
+                            title == "Recent Songs"
                         ? Icon(
                             FontAwesomeIcons.arrowAltCircleRight,
                             color: Colors.white,
                           )
-                        : Icon(
-                            Icons.favorite_border_rounded,
-                            color: Colors.red,
-                          )),
+                        : Container()),
               ),
+              title != "All Songs" &&
+                      title != "Favorites" &&
+                      title != "Recent Songs"
+                  ? Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(context: context, builder: (context)=>
+                            AlertDialog(
+                              backgroundColor: ColorsForApp.goldenLow,
+                              actionsAlignment: MainAxisAlignment.center,
+                              title: TextFormField(
+                                cursorColor: Colors.black,
+                  style: TextStyle(color: Colors.black),
+                  decoration: InputDecoration(
+                    
+                    focusedBorder:OutlineInputBorder(
+                          borderSide: BorderSide(
+                    color: ColorsForApp.golden.withOpacity(0.5),
+                  ),) ,
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                    color: ColorsForApp.golden.withOpacity(0.5),
+                  ),),),
+                                controller: controller,
+                                onChanged: (value){
+                                 
+                                },
+                                
+                              ),
+                              actions: [
+                                ElevatedButton(onPressed: (){
+                                  List<AudioModel> audioModelSongs = db.getSongs(title);
+                                  if(controller.text!=""){
+                                    db.deleteKey(title);
+                                     db.insertSongs(audioModelSongs, controller.text);
+                                  
+                                  setStateOfPlaylistScreen();
+                                  Navigator.of(context).pop();
+                                  }else{
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Playlist name can't be empty")));
+                                  }
+                                 
+                                }, child: Text("Confirm"),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.black
+                                ),
+                                )
+                              ],
+                            )
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 15.0),
+                            child: Container(
+                                child: Icon(
+                              FontAwesomeIcons.edit,
+                              color: Colors.white,
+                              size: 20,
+                            )),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  actionsAlignment: MainAxisAlignment.spaceAround,
+                                      backgroundColor: ColorsForApp.goldenLow,
+                                      title: Text("Delete?"),
+                                      actions: [
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: ColorsForApp.dark,
+                                            ),
+                                            onPressed: () {
+                                              allSongsBox!.delete(title);
+                                              setStateOfPlaylistScreen();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("Yes")),
+                                        ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                              primary: ColorsForApp.dark,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("No"))
+                                      ],
+                                    ));
+                          },
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Container(
+                                child: Icon(
+                              FontAwesomeIcons.trash,
+                              color: Colors.white,
+                              size: 20,
+                            )),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(),
             ],
           ),
         ),

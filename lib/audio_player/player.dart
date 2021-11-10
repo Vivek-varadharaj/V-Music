@@ -1,11 +1,13 @@
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:restart_app/restart_app.dart';
 import 'package:v_music_player/style/style.dart';
 
 class Player{
+  
    AssetsAudioPlayer? assetsAudioPlayer = AssetsAudioPlayer.withId("0");
    DatabaseFunctions db = DatabaseFunctions.getDatabase();
   
@@ -22,7 +24,9 @@ class Player{
    
 
   void openPlaylistInPlayer({int? index,List <Audio>? audioModelSongs, BuildContext? context, Audio? audioModel,String? playlistName,Function? setStateOfTheScreen}) async {
-    // getsongs();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool notifications = prefs.getBool("notifications")!;
+    // getsongs();  
 try{
     await assetsAudioPlayer!.open(
         Playlist(
@@ -30,7 +34,7 @@ try{
           startIndex: index!,
         ),
         autoStart: true,
-        showNotification: true);
+        showNotification: notifications);
 }catch( e){
   db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
            ScaffoldMessenger.of(context!).showSnackBar(SnackBar(

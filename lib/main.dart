@@ -9,6 +9,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_home.dart';
@@ -21,11 +22,22 @@ import 'package:v_music_player/widgets/bottom_control_other_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   Directory dir = await getApplicationDocumentsDirectory();
   String path = dir.path;
+  bool? notifications;
   Hive.init(path);
   Hive.registerAdapter(AudioModelAdapter());
   await Hive.openBox<List<dynamic>>("allSongsBox");
+  DatabaseFunctions db = DatabaseFunctions.getDatabase();
+  List<dynamic> keys = db.getKeys();
+  if (keys.isEmpty) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("notifications", true);
+    notifications = prefs.getBool("notifications");
+    print(notifications);
+  } else
+    print(keys);
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -41,6 +53,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool? notifications;
   int _selectedIndex = 0;
   OnAudioQuery? audio;
   List<SongModel> songs = [];
@@ -97,10 +110,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print("build started");
     List<Widget> bottomNavScreens = [
       HomeScreen(audioSongsList),
       SearchScreen(),
-      Library(), //I have to pass the recent song here. or i will have to get the recent songs in LIbrary screen
+      Library(),
     ];
 
     return WillPopScope(
@@ -108,27 +122,22 @@ class _MyAppState extends State<MyApp> {
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              elevation:20,
-              backgroundColor:ColorsForApp.goldenLow,
-
+                  elevation: 20,
+                  backgroundColor: ColorsForApp.goldenLow,
                   title: Text("Exit ?"),
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
-                        style:ElevatedButton.styleFrom(
-primary: ColorsForApp.dark
-                        
-                        ), 
+                          style: ElevatedButton.styleFrom(
+                              primary: ColorsForApp.dark),
                           onPressed: () {
                             SystemNavigator.pop();
                           },
                           child: Text("Yes")),
                       ElevatedButton(
-                        style:ElevatedButton.styleFrom(
-primary: ColorsForApp.dark
-                        
-                        ),
+                          style: ElevatedButton.styleFrom(
+                              primary: ColorsForApp.dark),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },

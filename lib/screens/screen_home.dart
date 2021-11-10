@@ -1,53 +1,105 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:v_music_player/style/style.dart';
 
 import 'package:v_music_player/widgets/recent_song_tile.dart';
 import 'package:v_music_player/widgets/widget_song_tile.dart';
 
-
-
 class HomeScreen extends StatefulWidget {
- final List<Audio> audioModelSongs;
-  HomeScreen(this.audioModelSongs);
+  final List<Audio> audioModelSongs;
+
+  HomeScreen(
+    this.audioModelSongs,
+  );
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   bool switchTileView = false;
-  
-  
+  bool notifications = true;
+  SharedPreferences? prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    getPreference();
+  }
+
+  void getPreference() async {
+    prefs = await SharedPreferences.getInstance();
+    notifications = prefs!.getBool("notifications")!;
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       drawer: Drawer(
+      drawer: Drawer(
         child: Container(
-          color: ColorsForApp.dark,
+          color: ColorsForApp.goldenLow,
           child: Column(
             children: [
-            DrawerHeader(child: Text("V Music", style:StyleForApp.heading ,),
-            padding: EdgeInsets.all(40),
-            )  ,
-              ListTile(
-                
-                title: Text("About",style: StyleForApp.heading,
-               
+              DrawerHeader(
+                child: Text(
+                  "V Music",
+                  style: StyleForApp.heading,
                 ),
-                 leading:Icon(FontAwesomeIcons.user,color: Colors.white,size: 18,),
-                 trailing: Icon(Icons.forward,color:Colors.white),
+                padding: EdgeInsets.all(40),
               ),
-
               ListTile(
-                
-                title: Text("About",style: StyleForApp.heading,
-               
+                onTap: (){
+                  showAboutDialog(context: context,applicationName: "V Music", applicationVersion: "1.01",applicationLegalese:"Not Attached",applicationIcon: Icon(FontAwesomeIcons.appStore) );
+                },
+                tileColor: ColorsForApp.goldenLow,
+                title: Text(
+                  "About",
+                  style: StyleForApp.heading,
                 ),
-                 leading:Icon(FontAwesomeIcons.user,color: Colors.white,size: 18,),
-                 trailing: Icon(Icons.forward,color:Colors.white),
+                leading: Icon(
+                  FontAwesomeIcons.user,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                trailing: Icon(Icons.forward, color: Colors.white),
+              ),
+              ListTile(
+                title: Text(
+                  "App Version   1.01",
+                  style: StyleForApp.heading,
+                ),
+                leading: Icon(
+                  FontAwesomeIcons.appStore,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Notifications",
+                  style: StyleForApp.heading,
+                ),
+                leading: Icon(
+                  FontAwesomeIcons.bell,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                trailing: Switch(
+                    inactiveThumbColor: ColorsForApp.golden,
+                    activeColor: ColorsForApp.golden,
+                    activeTrackColor: ColorsForApp.golden,
+                    inactiveTrackColor: ColorsForApp.golden.withOpacity(0.5),
+                    value: notifications,
+                    onChanged: (value) {
+                      ;
+                      setState(() {
+                        notifications = value;
+                        prefs!.setBool("notifications", value);
+                      });
+                    }),
               ),
             ],
           ),
@@ -72,7 +124,6 @@ class _HomeScreenState extends State<HomeScreen> {
           Transform.scale(
             scale: 0.5,
             child: Switch(
-                
                 inactiveThumbColor: ColorsForApp.golden,
                 activeColor: ColorsForApp.golden,
                 activeTrackColor: ColorsForApp.golden,
@@ -98,11 +149,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ...widget.audioModelSongs
                         .map(
                           (e) => RecentSongTile(
-                           audioModel: e,
-                          audioModelSongs:  widget.audioModelSongs,
-                           index: widget.audioModelSongs.indexOf(e),
-                           playlistName: "All Songs",
-                           setStateOfTheScreen:setStateOfTheScreen ,
+                            audioModel: e,
+                            audioModelSongs: widget.audioModelSongs,
+                            index: widget.audioModelSongs.indexOf(e),
+                            playlistName: "All Songs",
+                            setStateOfTheScreen: setStateOfTheScreen,
                           ),
                         )
                         .toList(),
@@ -115,16 +166,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 15,
                   children: widget.audioModelSongs
-                      .map((e) => SongTile(e, widget.audioModelSongs,
-                          widget.audioModelSongs.indexOf(e),))
+                      .map((e) => SongTile(
+                            e,
+                            widget.audioModelSongs,
+                            widget.audioModelSongs.indexOf(e),
+                          ))
                       .toList())),
-                  
     );
   }
-void  setStateOfTheScreen(){
-    setState(() {
-      
-    });
+
+  void setStateOfTheScreen() {
+    setState(() {});
   }
- 
 }

@@ -41,8 +41,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        bool isAvailable = await io.File(widget.audioModelSongs[widget.index].path).exists();
-        if(isAvailable){
+       
           player.openPlaylistInPlayer(
             index: widget.index, audioModelSongs: widget.audioModelSongs);
         Navigator.push(
@@ -51,13 +50,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                 duration: Duration(milliseconds: 500),
                 type: PageTransitionType.fade,
                 child: NowPlaying(widget.audioModelSongs, widget.index)));
-        } else{
-          db.deleteFromPlaylist(widget.audioModelSongs,widget.audioModel,widget.playlistName!); 
-           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text("Selected song is not available, Song removed from playlist"),
-          
-        ));
-        }
+        
         
         print("Navigated to Screen Now Playing");
       },

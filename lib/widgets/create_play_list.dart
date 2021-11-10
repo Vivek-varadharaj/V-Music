@@ -33,17 +33,28 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
+            backgroundColor: ColorsForApp.goldenLow,
             title: Column(
               children: [
                 TextFormField(
+                  cursorColor: Colors.black,
+                  style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(
+                    
+                    focusedBorder:OutlineInputBorder(
+                          borderSide: BorderSide(
+                    color: ColorsForApp.golden.withOpacity(0.5),
+                  ),) ,
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                     color: ColorsForApp.golden.withOpacity(0.5),
-                  ))),
+                  ),),),
                   controller: _controller,
                 ),
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black,
+                  ),
                     onPressed: () {
                       putIt(context);
                     },
@@ -94,6 +105,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
     if (_controller.text.isNotEmpty && isItUnique) {
       final newPlaylistName = _controller.text;
       await allSongsBox!.put(newPlaylistName, newPlaylist);
+      _controller.text="";
       widget.setStateOfPlaylistScreen();
       print(await allSongsBox!.values.cast<List<AudioModel>>());
       final snackBar = SnackBar(

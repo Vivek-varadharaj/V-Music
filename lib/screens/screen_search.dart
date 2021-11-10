@@ -1,7 +1,13 @@
+import 'dart:async';
+
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:v_music_player/data_base/audio_model.dart';
+import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/style/style.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
+import 'package:v_music_player/widgets/recent_song_tile.dart';
 
 
 class SearchScreen extends StatefulWidget {
@@ -12,6 +18,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  DatabaseFunctions db = DatabaseFunctions.getDatabase();
+  List <Audio> audioSongs =[];
   TextEditingController _controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -42,13 +50,28 @@ class _SearchScreenState extends State<SearchScreen> {
                   width: 1),
               ),
             ),
-            onChanged: (keyword){
-              //TODO implement search logic here. Will need an array 
+            onChanged: (keyword) async{
+             
+             List<AudioModel>  myAudioModelSongs=  db.getSongs("All Songs");
+             audioSongs = db.AudioModelToAudio(myAudioModelSongs);
+             audioSongs = await Future.delayed(Duration(milliseconds: 1000),(){
+               print(keyword.toUpperCase());
+             return  audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
+             });
+             setState(() {
+               if(keyword==""){
+                 audioSongs = [];
+               }
+               else Timer.periodic(Duration(milliseconds: 1000),(timer){
+                  audioSongs = audioSongs;
+               }) ;
+               
+             });
             },
             ),
           ),
 
-
+         ...audioSongs.map((audioSong) => RecentSongTile(audioModel: audioSong, audioModelSongs: audioSongs,index: audioSongs.indexOf(audioSong),) )
         ],
       ),
     );
