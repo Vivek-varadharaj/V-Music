@@ -7,6 +7,7 @@ import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_playlist_songs.dart';
 import 'package:v_music_player/style/style.dart';
 
+// ignore: must_be_immutable
 class PlaylistTile extends StatelessWidget {
   TextEditingController controller = TextEditingController();
   DatabaseFunctions db = DatabaseFunctions.getDatabase();

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/style/style.dart';
+import 'package:v_music_player/widgets/add_songs_individully_to_playlist.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
+
 import 'package:v_music_player/widgets/playlist_song_tile_display.dart';
 
 class PlaylistSongsScreen extends StatefulWidget {
@@ -31,14 +33,11 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
     setState(() {});
   }
 
-  @override
-  void initState() {
-    super.initState();
-    getSongs();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
+    getSongs();
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar(widget.playlistName),
@@ -46,7 +45,9 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: audioSongs!.length > 0
               ? ListView(
-                  children: audioSongs!
+                  children: [
+                widget.playlistName !="Favorites" &&   widget.playlistName !="Recent Songs" && widget.playlistName !="All Songs" ? AddIndividulSongsToPlaylist( getSongs, widget.playlistName):Container(),
+                    ...audioSongs!
                       .map(
                         (audioSong) => PlaylistSongTile(
                           audioSong,
@@ -56,14 +57,19 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
                           getSongs,
                         ),
                       )
-                      .toList())
+                      .toList()])
               : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
+                    widget.playlistName !="Favorites" &&   widget.playlistName !="Recent Songs" && widget.playlistName !="All Songs" ? AddIndividulSongsToPlaylist( getSongs, widget.playlistName):Container(),
+                    
                     Center(
-                      child: Text(
-                        "No Songs Yet!!!",
-                        style: StyleForApp.heading,
+                      child: Padding(
+                        padding: const EdgeInsets.all(40.0),
+                        child: Text(
+                          "No Songs Yet!!!",
+                          style: StyleForApp.heading,
+                        ),
                       ),
                     ),
                   ],

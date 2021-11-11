@@ -11,7 +11,7 @@ import 'package:v_music_player/widgets/recent_song_tile.dart';
 
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({ Key? key }) : super(key: key);
+  const SearchScreen();
 
   @override
   _SearchScreenState createState() => _SearchScreenState();

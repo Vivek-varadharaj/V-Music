@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:v_music_player/style/style.dart';
-
 import 'package:v_music_player/widgets/recent_song_tile.dart';
 import 'package:v_music_player/widgets/widget_song_tile.dart';
 
@@ -22,6 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
   bool switchTileView = false;
   bool notifications = true;
   SharedPreferences? prefs;
+  num? _timerValue ;
+  Timer? _timer;
 
   @override
   void initState() {
@@ -32,7 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void getPreference() async {
     prefs = await SharedPreferences.getInstance();
     notifications = prefs!.getBool("notifications")!;
-    setState(() {});
+    switchTileView=prefs!.getBool("tile view")!;
+    
   }
 
   @override
@@ -40,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       drawer: Drawer(
         child: Container(
-          color: ColorsForApp.goldenLow,
+          color: Colors.black,
           child: Column(
             children: [
               DrawerHeader(
@@ -50,56 +55,142 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 padding: EdgeInsets.all(40),
               ),
-              ListTile(
-                onTap: (){
-                  showAboutDialog(context: context,applicationName: "V Music", applicationVersion: "1.01",applicationLegalese:"Not Attached",applicationIcon: Icon(FontAwesomeIcons.appStore) );
-                },
-                tileColor: ColorsForApp.goldenLow,
-                title: Text(
-                  "About",
-                  style: StyleForApp.heading,
-                ),
-                leading: Icon(
-                  FontAwesomeIcons.user,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                trailing: Icon(Icons.forward, color: Colors.white),
-              ),
-              ListTile(
-                title: Text(
-                  "App Version   1.01",
-                  style: StyleForApp.heading,
-                ),
-                leading: Icon(
-                  FontAwesomeIcons.appStore,
-                  color: Colors.white,
-                  size: 18,
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                color: ColorsForApp.goldenLow,
+          
+                child: ListTile(
+                  onTap: (){
+                    showAboutDialog(context: context,applicationName: "V Music", applicationVersion: "1.01",applicationLegalese:"Not Attached",applicationIcon: Icon(FontAwesomeIcons.appStore) );
+                  },
+                  
+                  title: Text(
+                    "About",
+                    style: StyleForApp.tileDisc,
+                  ),
+                  leading: Icon(
+                    FontAwesomeIcons.user,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  trailing: Icon(Icons.forward, color: Colors.white),
                 ),
               ),
-              ListTile(
-                title: Text(
-                  "Notifications",
-                  style: StyleForApp.heading,
+              Container(
+                 margin: EdgeInsets.only(top: 10),
+                color: ColorsForApp.goldenLow,
+     
+                child: ListTile(
+                
+                  title: Text(
+                    "App Version   1.01",
+                    style: StyleForApp.tileDisc,
+                  ),
+                  leading: Icon(
+                    FontAwesomeIcons.appStore,
+                    color: Colors.white,
+                    size: 18,
+                  ),
                 ),
-                leading: Icon(
-                  FontAwesomeIcons.bell,
-                  color: Colors.white,
-                  size: 18,
+              ),
+              Container(
+                 margin: EdgeInsets.only(top: 10),
+                color: ColorsForApp.goldenLow,
+
+                child: ListTile(
+                
+                  title: Text(
+                    "Notifications",
+                    style: StyleForApp.tileDisc,
+                  ),
+                  leading: Icon(
+                    FontAwesomeIcons.bell,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  trailing: Switch(
+                      inactiveThumbColor: ColorsForApp.golden,
+                      activeColor: ColorsForApp.golden,
+                      activeTrackColor: ColorsForApp.golden,
+                      inactiveTrackColor: ColorsForApp.golden.withOpacity(0.5),
+                      value: notifications,
+                      onChanged: (value) {
+                        ;
+                        setState(() {
+                          notifications = value;
+                          prefs!.setBool("notifications", value);
+                        });
+                      }),
                 ),
-                trailing: Switch(
-                    inactiveThumbColor: ColorsForApp.golden,
-                    activeColor: ColorsForApp.golden,
-                    activeTrackColor: ColorsForApp.golden,
-                    inactiveTrackColor: ColorsForApp.golden.withOpacity(0.5),
-                    value: notifications,
-                    onChanged: (value) {
-                      ;
+              ),
+              Container(
+                 margin: EdgeInsets.only(top: 10),
+                color: ColorsForApp.goldenLow,
+
+                child: ListTile(
+                
+                  title: Text(
+                    "Sleep Timer",
+                    style: StyleForApp.tileDisc,
+                  ),
+                  leading: Icon(
+                    FontAwesomeIcons.bell,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  trailing: DropdownButton(
+                    underline: Container(),
+                    iconDisabledColor: Colors.white,
+                    iconEnabledColor: Colors.white,
+                    hint: Text("Timer", style: StyleForApp.tileDisc,),
+                    value: _timerValue,
+                    onChanged: (num? val){
                       setState(() {
-                        notifications = value;
-                        prefs!.setBool("notifications", value);
+                        _timerValue = val!;
                       });
-                    }),
+                      
+                      _timer= Timer(Duration(minutes: _timerValue!.toInt()), (){
+                        SystemNavigator.pop();
+                      
+                      });
+                      
+                      
+                    },
+                    items:[
+                      _timerValue!=null ?  DropdownMenuItem(
+                          onTap: (){
+                            
+                            setState(() {
+                              _timer!.cancel();
+                            });
+                          },
+                      value:double.infinity,
+                      child: Text("Reset"))
+                      
+                      : 
+                    
+                    DropdownMenuItem(
+                      onTap: (){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sleep timer is Off")));
+                      },
+                      value:double.infinity,
+                      child: Text("Timer")),
+                    DropdownMenuItem(
+                       onTap: (){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sleep timer is Off")));
+                      },
+                      value:30,
+                      child: Text("30 min")),
+
+                       DropdownMenuItem(
+                         
+                         onTap: (){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("App will close after 60 min")));
+                      },
+                      value:60,
+                      child: Text("60 min")),
+                  ] ),
+                ),
               ),
             ],
           ),
@@ -131,7 +222,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: switchTileView,
                 onChanged: (value) {
                   setState(() {
-                    switchTileView = value;
+                    prefs!.setBool("tile view", value);
+                    getPreference();
                   });
                 }),
           )

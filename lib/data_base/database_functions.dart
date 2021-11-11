@@ -10,34 +10,36 @@ import 'package:v_music_player/style/style.dart';
 import 'audio_model.dart';
 
 class DatabaseFunctions {
-  final Box<List<dynamic>>? allSongsBox = Hive.box("allSongsBox");
-  static DatabaseFunctions? db;
+  final Box<List<dynamic>>? _allSongsBox = Hive.box("allSongsBox");
+
+  static  DatabaseFunctions? _db;
   DatabaseFunctions.getDatabase();
 
   factory DatabaseFunctions() {
-    if (db == null) {
-      db = DatabaseFunctions.getDatabase();
-      return db!;
+    if (_db == null) {
+      _db = DatabaseFunctions.getDatabase();
+      return _db!;
     }
-    return db!;
+    return _db!;
   }
 
   void deleteKey(String key){
-    allSongsBox!.delete(key);
+    _allSongsBox!.delete(key);
   }
 
   // get songs by playlist name
 
   List<AudioModel> getSongs(playlistName)  {
     final List<AudioModel> audioModelSongs =
-         allSongsBox!.get(playlistName)!.cast<AudioModel>();
+         _allSongsBox!.get(playlistName)!.cast<AudioModel>();
     return audioModelSongs;
   }
 
   // insert songs by playlist name
 
-  void insertSongs(List<AudioModel> playlist, String playlistName) async {
-    await allSongsBox!.put(playlistName, playlist);
+   insertSongs(List<AudioModel> playlist, String playlistName) async {
+    await _allSongsBox!.put(playlistName, playlist);
+    return true;
   }
 
   // converting Audio Model into Audio
@@ -89,7 +91,7 @@ class DatabaseFunctions {
   // fetching all the keys
 
   List<String> getKeys() {
-    final List<String> keys = allSongsBox!.keys.toList().cast<String>();
+    final List<String> keys = _allSongsBox!.keys.toList().cast<String>();
     return keys;
   }
 
@@ -131,7 +133,7 @@ class DatabaseFunctions {
         playlistSongs
             .removeWhere((element) => element.id == myAudioModelSong.id);
             playlistSongs.add(myAudioModelSong);
-        await allSongsBox!.put(playlistName, playlistSongs);
+        await _allSongsBox!.put(playlistName, playlistSongs);
         
       }
       if (playlistName == "Favorites"){
@@ -147,7 +149,7 @@ class DatabaseFunctions {
           title: audioModel.metas.title,
           id: audioModel.metas.extra!["id"],
           duration : audioModel.metas.extra!["duration"]));
-      await allSongsBox!.put(playlistName, playlistSongs);
+      await _allSongsBox!.put(playlistName, playlistSongs);
 
       // confirms the playlist name is not Recent Songs so that we can avoid
       // showing snackbar to every song added to the Recent songs
@@ -168,7 +170,7 @@ class DatabaseFunctions {
       
     }
 
-    print(await allSongsBox!.get(playlistName));
+    print(await _allSongsBox!.get(playlistName));
   }
 
   bool isExists(playlistSongs, myAudioModelSong) {
@@ -238,12 +240,13 @@ class DatabaseFunctions {
     print("show dialogue");
   }
    
-   void deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel, String playlistName) {
+    deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel, String playlistName) async {
     List<AudioModel> myAudioModelSongs =
         audioToMyAudioModel(audioModelSongs);
     myAudioModelSongs
         .removeWhere((element) => element.id == audioModel.metas.extra!['id']);
-    insertSongs(myAudioModelSongs, playlistName);
+  await  insertSongs(myAudioModelSongs, playlistName);
+  return true;
     
     
   }
@@ -285,7 +288,7 @@ class DatabaseFunctions {
         playlistSongs
             .removeWhere((element) => element.id == myAudioModelSong.id);
             playlistSongs.add(myAudioModelSong);
-        await allSongsBox!.put(playlistName, playlistSongs);
+        await _allSongsBox!.put(playlistName, playlistSongs);
         
       }
 
@@ -298,15 +301,12 @@ class DatabaseFunctions {
           title: audioModel.metas.title,
           id: audioModel.metas.extra!["id"],
           duration : audioModel.metas.extra!["duration"]));
-      await allSongsBox!.put(playlistName, playlistSongs);
+      await _allSongsBox!.put(playlistName, playlistSongs);
 
       // confirms the playlist name is not Recent Songs so that we can avoid
       // showing snackbar to every song added to the Recent songs
       //
-      if (playlistName != "Recent Songs") {
-        ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
-          content: Text("Song added to '$playlistName'"),
-        ));
+      
       }
 
       // avoids the screen popping issue when we add song to favorites from the
@@ -317,5 +317,17 @@ class DatabaseFunctions {
       
     }
 
+
+     deleteFromPlaylistFromPlaylistScreen( Audio audioModel, String playlistName) async {
+       List<AudioModel> myAudioModelSongs = getSongs(playlistName);
+    
+    myAudioModelSongs
+        .removeWhere((element) => element.id == audioModel.metas.extra!['id']);
+  await  insertSongs(myAudioModelSongs, playlistName);
+  return true;
+    
+    
+  }
+
 }
-}
+

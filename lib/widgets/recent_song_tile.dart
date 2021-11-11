@@ -7,7 +7,7 @@ import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_now_playing.dart';
 import 'package:v_music_player/style/style.dart';
-import 'dart:io' ;
+import 'dart:io';
 
 // ignore: must_be_immutable
 class RecentSongTile extends StatelessWidget {

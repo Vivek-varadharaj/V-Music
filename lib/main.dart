@@ -1,22 +1,18 @@
 import 'dart:io';
-
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_home.dart';
 import 'package:v_music_player/screens/screen_library.dart';
 import 'package:v_music_player/screens/screen_search.dart';
 import 'package:v_music_player/style/style.dart';
-
 import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/widgets/bottom_control_other_screens.dart';
 
@@ -34,6 +30,9 @@ void main() async {
   if (keys.isEmpty) {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("notifications", true);
+    await prefs.setBool("loop", false);
+    await prefs.setBool("shuffle", false);
+    await prefs.setBool("tile view", false);
     notifications = prefs.getBool("notifications");
     print(notifications);
   } else
@@ -148,7 +147,7 @@ class _MyAppState extends State<MyApp> {
         return true;
       },
       child: Scaffold(
-        bottomSheet: BottomControlForOtherScreens(audioSongsList),
+       
         bottomNavigationBar: Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
@@ -193,7 +192,11 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
         ),
-        body: bottomNavScreens.elementAt(_selectedIndex),
+        body: Stack(children:[bottomNavScreens.elementAt(_selectedIndex), 
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: BottomControlForOtherScreens(audioSongsList)),] ),
       ),
     );
   }

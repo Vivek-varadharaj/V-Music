@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 
+// ignore: must_be_immutable
 class FavoriteToggling extends StatefulWidget {
   Audio? audioModel;
  List<Audio> audioSongs;

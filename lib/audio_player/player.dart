@@ -12,14 +12,14 @@ class Player{
    DatabaseFunctions db = DatabaseFunctions.getDatabase();
   
    Player.getAudioPlayer();
-  static Player? player;
+  static Player? _player;
 
    factory Player(){
-     if(player==null){
-       player = Player.getAudioPlayer();
-       return player!;
+     if(_player==null){
+       _player = Player.getAudioPlayer();
+       return _player!;
      }
-     return player!;
+     return _player!;
    }
    
 
@@ -32,9 +32,14 @@ try{
         Playlist(
           audios: audioModelSongs,
           startIndex: index!,
+          
         ),
         autoStart: true,
-        showNotification: notifications);
+        showNotification: notifications,
+        loopMode: LoopMode.playlist,
+        notificationSettings: NotificationSettings(
+          stopEnabled: false
+        ));
 }catch( e){
   db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
            ScaffoldMessenger.of(context!).showSnackBar(SnackBar(

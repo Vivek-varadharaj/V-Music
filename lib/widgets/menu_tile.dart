@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:v_music_player/screens/screen_albums.dart';
 
 import 'package:v_music_player/screens/screen_playlist.dart';
+import 'package:v_music_player/screens/screen_playlist_songs.dart';
 import 'package:v_music_player/style/style.dart';
 
 class MenuTile extends StatelessWidget {
@@ -20,6 +21,9 @@ class MenuTile extends StatelessWidget {
         }
         else if(title=="Albums"){
            Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AlbumScreen()));//Actually we will be passing the entire song list model here
+        }
+        else if(title=="Favorites"){
+           Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: PlaylistSongsScreen("Favorites")));
         }
        
       },
@@ -46,7 +50,7 @@ class MenuTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal:25.0),
                     child: Text(title,style: StyleForApp.heading,),
                   )),
-                Icon(FontAwesomeIcons.arrowAltCircleRight,color: Colors.white,)
+               title !="Favorites" ? Icon(FontAwesomeIcons.arrowAltCircleRight,color: Colors.white,): Icon(FontAwesomeIcons.heart,color: Colors.red,)
             ],
              
            

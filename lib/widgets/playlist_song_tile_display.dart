@@ -1,4 +1,4 @@
-import 'dart:io' as io;
+
 
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
@@ -87,14 +87,14 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                 ),
               ),
               GestureDetector(
-                  onTap: () {
+                  onTap: widget.playlistName !="All Songs" ?  () {
                     showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
                               backgroundColor: ColorsForApp.goldenLow,
                               title: Column(
                                 children: [
-                                  ListTile(
+                                ListTile(
                                     onTap: () {
                                       db.deleteFromPlaylist(widget.audioModelSongs,widget.audioModel,widget.playlistName!); 
                                       widget.setStateOfPlaylistScreen(); // deletes from playlist . written below this class
@@ -131,6 +131,8 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                               ),
                             ));
                     
+                  } : (){
+                    db.addToPlaylistOrFavorites(context: context, audioModel: audioModel );
                   },
                   child: Container(
                     color: ColorsForApp.golden.withOpacity(0.2),

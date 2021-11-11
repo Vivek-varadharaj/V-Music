@@ -44,13 +44,13 @@ class _PlayListScreenState extends State<PlayListScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(
-          children: [
+          children:  [
             Container(
               child: (widget.playlistName == "Playlists")
-                  ? CreatePlaylist(getPlaylistNames)
+                  ? CreatePlaylist(setStateOfPlaylistScreen: getPlaylistNames)
                   : Container(),
             ),
-            ...playlistNames!.map((PlaylistName) => PlaylistTile(PlaylistName, getPlaylistNames)).toList()
+           ...playlistNames!.map((PlaylistName) =>  PlaylistTile(PlaylistName, getPlaylistNames)).toList()
           ],
         ),
       ),

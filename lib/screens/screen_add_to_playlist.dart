@@ -5,6 +5,7 @@ import 'package:v_music_player/style/style.dart';
 
 import 'package:v_music_player/widgets/add_to_playlist_tile.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
+import 'package:v_music_player/widgets/create_play_list.dart';
 
 class AddToPlaylistScreen extends StatefulWidget {
  final Audio? audioModel;
@@ -18,6 +19,7 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
   final Box<List<dynamic>> allSongsBox = Hive.box("allSongsBox");
 
   List<String>? playlistNames=[];
+ 
 
  void getPlaylistNames()  {
     playlistNames =  allSongsBox.keys.toList().cast<String>();
@@ -43,8 +45,11 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  playlistNames!.length>0 ?  ListView(
-          children: 
-          playlistNames!.map((playlistNames) => AddToPlaylistTile(widget.audioModel, playlistNames)).toList() ): Column(
+          children: [
+                  CreatePlaylist(setStateOfPlaylistScreen:  getPlaylistNames),
+              ...playlistNames!.map((playlistNames) => AddToPlaylistTile(widget.audioModel, playlistNames)).toList()] )
+          
+          : Column(
             mainAxisAlignment: MainAxisAlignment.center,
     children: [
         Center(child: Text("No Playlists yet!!",style: StyleForApp.heading,)),

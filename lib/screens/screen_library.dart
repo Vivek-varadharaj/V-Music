@@ -21,6 +21,7 @@ class _LibraryState extends State<Library> {
   List<String> titles = [
     "Playlists",
     "Albums",
+    "Favorites"
   ];
   List<AudioModel> myAudioModelSongs = [];
   List<Audio> audioSongs = [];

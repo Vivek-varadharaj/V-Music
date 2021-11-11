@@ -4,8 +4,9 @@ import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/style/style.dart';
 
 class CreatePlaylist extends StatefulWidget {
+
 final  Function setStateOfPlaylistScreen;
-  CreatePlaylist(this.setStateOfPlaylistScreen);
+  CreatePlaylist({required this.setStateOfPlaylistScreen, });
  static AudioModel sample = AudioModel(album: "vivek", path: "null" , title: "vivek", id: 2);
 
   @override
@@ -28,7 +29,9 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
   @override
   Widget build(BuildContext context) {
+    
     return GestureDetector(
+      
       onTap: () {
         showDialog(
           context: context,
@@ -69,10 +72,10 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+           Text(
               "Create New Playlist",
               style: StyleForApp.tileDisc,
-            ),
+            ) ,
             Icon(
               Icons.add,
               color: Colors.white,
