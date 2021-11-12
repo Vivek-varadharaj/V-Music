@@ -11,9 +11,10 @@ import 'package:v_music_player/widgets/widget_song_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   final List<Audio> audioModelSongs;
+  SharedPreferences prefs ;
 
   HomeScreen(
-    this.audioModelSongs,
+    this.audioModelSongs,this.prefs
   );
 
   @override
@@ -21,27 +22,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool switchTileView = false;
-  bool notifications = true;
-  SharedPreferences? prefs;
+  bool? switchTileView;
+  bool? notifications ;
+
   num? _timerValue ;
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    getPreference();
-  }
-
-  void getPreference() async {
-    prefs = await SharedPreferences.getInstance();
-    notifications = prefs!.getBool("notifications")!;
-    switchTileView=prefs!.getBool("tile view")!;
+    getPrefference();
     
   }
+  void getPrefference (){
+    switchTileView =widget.prefs.getBool("tile view");
+    notifications =widget.prefs.getBool("notifications");
+  }
+
+ 
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       drawer: Drawer(
         child: Container(
@@ -113,12 +115,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       activeColor: ColorsForApp.golden,
                       activeTrackColor: ColorsForApp.golden,
                       inactiveTrackColor: ColorsForApp.golden.withOpacity(0.5),
-                      value: notifications,
+                      value: notifications!,
                       onChanged: (value) {
                         ;
                         setState(() {
                           notifications = value;
-                          prefs!.setBool("notifications", value);
+                          widget.prefs.setBool("notifications", value);
                         });
                       }),
                 ),
@@ -134,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: StyleForApp.tileDisc,
                   ),
                   leading: Icon(
-                    FontAwesomeIcons.bell,
+                    FontAwesomeIcons.stopwatch,
                     color: Colors.white,
                     size: 18,
                   ),
@@ -219,11 +221,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 activeColor: ColorsForApp.golden,
                 activeTrackColor: ColorsForApp.golden,
                 inactiveTrackColor: ColorsForApp.golden.withOpacity(0.5),
-                value: switchTileView,
-                onChanged: (value) {
+                value: switchTileView!,
+                onChanged: (value) async {
+                  await widget. prefs.setBool("tile view", value);
                   setState(() {
-                    prefs!.setBool("tile view", value);
-                    getPreference();
+                  
+                    getPrefference();
                   });
                 }),
           )
@@ -232,7 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Container(
           // color: Colors.grey[200],
           padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
-          child: switchTileView
+          child: switchTileView!
               ? GridView.count(
                   crossAxisCount: 1,
                   childAspectRatio: 5.5,

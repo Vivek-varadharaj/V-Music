@@ -29,20 +29,7 @@ class PlaylistTile extends StatelessWidget {
                 child: PlaylistSongsScreen(
                     title))); //Actually we will be passing the entire song list model here
       },
-      onLongPress: () {
-        if (title != "Favorites" &&
-            title != "All Songs" &&
-            title != "Recent Songs") {
-          allSongsBox!.delete(title);
-          setStateOfPlaylistScreen();
-          print("Deleted Playlist");
-        } else
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Cannot delete in-built playlist '$title'"),
-            ),
-          );
-      },
+     
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         child: Container(
@@ -94,8 +81,8 @@ class PlaylistTile extends StatelessWidget {
                               backgroundColor: ColorsForApp.goldenLow,
                               actionsAlignment: MainAxisAlignment.center,
                               title: TextFormField(
-                                cursorColor: Colors.black,
-                  style: TextStyle(color: Colors.black),
+                                cursorColor: Colors.white,
+                  style: StyleForApp.tileDisc,
                   decoration: InputDecoration(
                     
                     focusedBorder:OutlineInputBorder(

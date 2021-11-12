@@ -8,6 +8,7 @@ import 'package:on_audio_query/on_audio_query.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:v_music_player/audio_player/player.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_home.dart';
 import 'package:v_music_player/screens/screen_library.dart';
@@ -20,6 +21,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   Directory dir = await getApplicationDocumentsDirectory();
+  SharedPreferences? prefs = await SharedPreferences.getInstance();
   String path = dir.path;
   bool? notifications;
   Hive.init(path);
@@ -27,25 +29,42 @@ void main() async {
   await Hive.openBox<List<dynamic>>("allSongsBox");
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
   List<dynamic> keys = db.getKeys();
+  Player player = Player.getAudioPlayer();
   if (keys.isEmpty) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool("notifications", true);
     await prefs.setBool("loop", false);
     await prefs.setBool("shuffle", false);
     await prefs.setBool("tile view", false);
+    await prefs.setInt("duration", 0);
     notifications = prefs.getBool("notifications");
     print(notifications);
   } else
     print(keys);
 
+  if (keys.contains("Recent Songs")) {
+    List<AudioModel> recentSongs = db.getSongs("Recent Songs");
+    if (recentSongs.length > 0) {
+      recentSongs = recentSongs.reversed.toList();
+      List<Audio> recentSongsToPlay = db.AudioModelToAudio(recentSongs);
+      player.openPlaylistInPlayerRecent(
+        index: 0,
+        audioModelSongs: recentSongsToPlay,
+        playlistName: "Recent Songs",
+        setStateOfTheScreen: () {},
+      );
+    }
+  }
+
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    home: MyApp(prefs),
   ));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+  SharedPreferences prefs;
+
+  MyApp(this.prefs);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -78,8 +97,6 @@ class _MyAppState extends State<MyApp> {
       await Permission.storage.request();
     }
     songs = await audio!.querySongs();
-    List<dynamic> song = await audio!.queryAllPath();
-    print(song);
 
     audioModelSongs = songs
         .map((songModel) => AudioModel(
@@ -111,7 +128,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     print("build started");
     List<Widget> bottomNavScreens = [
-      HomeScreen(audioSongsList),
+      HomeScreen(audioSongsList, widget.prefs),
       SearchScreen(),
       Library(),
     ];
@@ -147,7 +164,6 @@ class _MyAppState extends State<MyApp> {
         return true;
       },
       child: Scaffold(
-       
         bottomNavigationBar: Container(
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
@@ -192,11 +208,13 @@ class _MyAppState extends State<MyApp> {
             ],
           ),
         ),
-        body: Stack(children:[bottomNavScreens.elementAt(_selectedIndex), 
-        Positioned(
-          right: 0,
-          bottom: 0,
-          child: BottomControlForOtherScreens(audioSongsList)),] ),
+        body: Stack(children: [
+          bottomNavScreens.elementAt(_selectedIndex),
+          Positioned(
+              right: 0,
+              bottom: 0,
+              child: BottomControlForOtherScreens(audioSongsList)),
+        ]),
       ),
     );
   }

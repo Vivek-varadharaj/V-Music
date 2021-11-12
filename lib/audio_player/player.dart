@@ -42,14 +42,17 @@ try{
         ));
 }catch( e){
   db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
-           ScaffoldMessenger.of(context!).showSnackBar(SnackBar(
+  if(context!=null)
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Selected song is not available, Song removed from playlist"),
           
           
         ));
         setStateOfTheScreen!();
+        if(context!=null)
         Navigator.of(context).pop();
         if(playlistName=="All Songs"){
+          if(context!=null)
           showDialog(context: context, builder: (context)=>
           AlertDialog(
             backgroundColor: ColorsForApp.golden,
@@ -76,6 +79,57 @@ try{
 
   void pauseCurrent() async{
    await assetsAudioPlayer!.pause();
+  }
+  
+
+
+  void openPlaylistInPlayerRecent({int? index,List <Audio>? audioModelSongs, BuildContext? context, Audio? audioModel,String? playlistName,Function? setStateOfTheScreen}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool notifications = prefs.getBool("notifications")!;
+    int duration = prefs.getInt("duration")!;
+    // getsongs();  
+try{
+    await assetsAudioPlayer!.open(
+        Playlist(
+          audios: audioModelSongs,
+          startIndex: index!,
+          
+        ),
+        autoStart: false,
+        showNotification: notifications,
+        loopMode: LoopMode.playlist,
+        seek: Duration(milliseconds: duration),
+        notificationSettings: NotificationSettings(
+          stopEnabled: false
+          
+        ));
+}catch( e){
+  db.deleteFromPlaylist(audioModelSongs!,audioModel!,playlistName!); 
+  if(context!=null)
+           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Selected song is not available, Song removed from playlist"),
+          
+          
+        ));
+        setStateOfTheScreen!();
+        if(context!=null)
+        Navigator.of(context).pop();
+        if(playlistName=="All Songs"){
+          if(context!=null)
+          showDialog(context: context, builder: (context)=>
+          AlertDialog(
+            backgroundColor: ColorsForApp.golden,
+            title: Text("Song Not Found", style: StyleForApp.heading,),
+            content:Text("Fetching the songs again",style: StyleForApp.tileDisc,),
+           
+          )
+          );
+          Future.delayed(Duration(milliseconds: 2000), (){
+            Restart.restartApp();
+          });
+          
+        }
+}
   }
 
   

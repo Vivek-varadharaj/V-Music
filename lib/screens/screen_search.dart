@@ -21,6 +21,7 @@ class _SearchScreenState extends State<SearchScreen> {
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
   List <Audio> audioSongs =[];
   TextEditingController _controller = TextEditingController();
+  Timer? _timer ;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,22 +52,32 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             onChanged: (keyword) async{
+             if(_timer!=null){
+               _timer!.cancel();
+             }
+              
              
              List<AudioModel>  myAudioModelSongs=  db.getSongs("All Songs");
-             audioSongs = db.AudioModelToAudio(myAudioModelSongs);
-             audioSongs = await Future.delayed(Duration(milliseconds: 1000),(){
-               print(keyword.toUpperCase());
-             return  audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
-             });
-             setState(() {
+             
+            //  audioSongs = await Future.delayed(Duration(milliseconds: 1000),(){
+            //    print(keyword.toUpperCase());
+            //  return  audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
+            //  });
+
+             _timer = Timer(Duration(seconds: 1), (){
+               audioSongs = db.AudioModelToAudio(myAudioModelSongs);
+               audioSongs=audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
+                setState(() {
+                 
                if(keyword==""){
                  audioSongs = [];
                }
-               else Timer.periodic(Duration(milliseconds: 1000),(timer){
-                  audioSongs = audioSongs;
-               }) ;
+             audioSongs = audioSongs;
                
              });
+              
+             });
+            
             },
             ),
           ),

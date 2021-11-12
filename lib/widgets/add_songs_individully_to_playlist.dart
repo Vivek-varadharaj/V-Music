@@ -29,7 +29,7 @@ class AddIndividulSongsToPlaylist extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
            Text(
-              "Add Songs to Playlist",
+              "Add or Remove Songs ",
               style: StyleForApp.tileDisc,
             ) ,
             Icon(

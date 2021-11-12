@@ -1,11 +1,12 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
-import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/style/style.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
 import 'package:v_music_player/widgets/bottom_control_panel.dart';
 import 'package:v_music_player/widgets/favorite_toggling_widget.dart';
+import 'package:v_music_player/widgets/progress_bar.dart';
 
 // ignore: must_be_immutable
 class NowPlaying extends StatefulWidget {
@@ -21,8 +22,18 @@ class _NowPlayingState extends State<NowPlaying> {
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
 
   Audio? nowPlaying;
+  SharedPreferences? prefs;
 
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId("0");
+ void getPreferences() async{
+   prefs  = await SharedPreferences.getInstance();
+    
+ }
+ @override
+  void initState() {
+    super.initState();
+    getPreferences();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +46,7 @@ class _NowPlayingState extends State<NowPlaying> {
         child: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
           nowPlaying = find(widget.audioModelSongs, playing.audio.assetAudioPath);
           db.addToPlaylist(audioModel: nowPlaying, context: context, playlistName: "Recent Songs");//inserting the song to Recent Songs playlist
-
+          
           return Container(
             width: MediaQuery.of(context).size.width,
             child: Column(
@@ -76,31 +87,9 @@ class _NowPlayingState extends State<NowPlaying> {
                     child: nowPlaying!.metas.extra!['image'],
                   ),
                 ),
-                assetsAudioPlayer.builderRealtimePlayingInfos(
-                  builder: (context, infos) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.02,
-                      child: ProgressBar(
-                        progress: Duration(
-                            milliseconds: infos.currentPosition.inMilliseconds),
-                        total: Duration(
-                            milliseconds: nowPlaying!.metas.extra!["duration"]), //infos.duration.inMilliseconds),
-                        onSeek: (newPosition) {
-                          assetsAudioPlayer.seek(newPosition);
-                        },
-                        timeLabelTextStyle:
-                            TextStyle(color: ColorsForApp.golden),
-                        progressBarColor: ColorsForApp.golden.withOpacity(0.8),
-                        barCapShape: BarCapShape.square,
-                        thumbGlowColor: ColorsForApp.golden,
-                        thumbRadius: 6,
-                        thumbGlowRadius: 8,
-                        thumbColor: ColorsForApp.golden,
-                        baseBarColor: ColorsForApp.golden.withOpacity(0.3),
-                      ),
-                    );
-                  },
-                ),
+               ProgressBarForSongs(nowPlaying,true),
+
+
                 assetsAudioPlayer.builderCurrent(
                   builder: (context, playing) {
                     final Audio nowPlaying =

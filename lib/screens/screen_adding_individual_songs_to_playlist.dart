@@ -25,6 +25,7 @@ class _ScreenAddingIndividualSongsToPlaylistState
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
   List<Audio> audioSongs = [];
   TextEditingController _controller = TextEditingController();
+  Timer? _timer ;
   @override
   void initState() {
     super.initState();
@@ -65,18 +66,30 @@ class _ScreenAddingIndividualSongsToPlaylistState
                 ),
               ),
               onChanged: (keyword) async {
-                audioSongs =
-                    await Future.delayed(Duration(milliseconds: 1000), () {
-                  print(keyword.toUpperCase());
-                  return audioSongs
-                      .where((element) => element.metas.title!
-                          .toUpperCase()
-                          .startsWith(keyword.toUpperCase()))
-                      .toList();
-                });
-                setState(() {});
-              },
-            ),
+                if(_timer!=null){
+               _timer!.cancel();
+             }
+              
+             
+             List<AudioModel>  myAudioModelSongs=  db.getSongs("All Songs");
+             
+            //  audioSongs = await Future.delayed(Duration(milliseconds: 1000),(){
+            //    print(keyword.toUpperCase());
+            //  return  audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
+            //  });
+
+             _timer = Timer(Duration(seconds: 1), (){
+               audioSongs = db.AudioModelToAudio(myAudioModelSongs);
+               audioSongs=audioSongs.where((element) => element.metas.title!.toUpperCase().startsWith(keyword.toUpperCase())).toList();
+                setState(() {
+                 
+               
+             audioSongs = audioSongs;
+               
+             });
+              
+             });
+              }),
           ),
           ...audioSongs.map((audioSong) => AddPlaylistSongsFromScreen(
               widget.playlistName,
