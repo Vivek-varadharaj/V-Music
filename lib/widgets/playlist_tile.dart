@@ -100,16 +100,18 @@ class PlaylistTile extends StatelessWidget {
                                 
                               ),
                               actions: [
-                                ElevatedButton(onPressed: (){
+                                ElevatedButton(onPressed: () async{
                                   List<AudioModel> audioModelSongs = db.getSongs(title);
-                                  if(controller.text!=""){
+                                  String keyword = controller.text;
+                                bool isItUnique = await isUnique(keyword);
+                                  if(controller.text!="" && isItUnique){
                                     db.deleteKey(title);
                                      db.insertSongs(audioModelSongs, controller.text);
                                   
                                   setStateOfPlaylistScreen();
                                   Navigator.of(context).pop();
                                   }else{
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Playlist name can't be empty")));
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Playlist name empty or it already exists")));
                                   }
                                  
                                 }, child: Text("Confirm"),
@@ -180,5 +182,20 @@ class PlaylistTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+    Future<bool> isUnique(String keyword) async {
+    int flag = 0;
+    List<String> alreadyPlaylists =
+        await allSongsBox!.keys.cast<String>().toList();
+    for (String playlist in alreadyPlaylists) {
+      if (playlist == keyword) {
+        flag = 1;
+      }
+    }
+    if (flag == 1) {
+      return false;
+    } else
+      return true;
   }
 }

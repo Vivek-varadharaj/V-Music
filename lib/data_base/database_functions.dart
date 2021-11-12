@@ -11,8 +11,14 @@ import 'audio_model.dart';
 
 class DatabaseFunctions {
   final Box<List<dynamic>>? _allSongsBox = Hive.box("allSongsBox");
+  List<String> images = [
+    "assets/asset_image_1.jfif",
+    "assets/asset_image_2.jpeg",
+    "assets/assets_image_3.jpg",
+    "assets/asset_image_4.jpg",
+  ];
 
-  static  DatabaseFunctions? _db;
+  static DatabaseFunctions? _db;
   DatabaseFunctions.getDatabase();
 
   factory DatabaseFunctions() {
@@ -23,27 +29,28 @@ class DatabaseFunctions {
     return _db!;
   }
 
-  void deleteKey(String key){
+  void deleteKey(String key) {
     _allSongsBox!.delete(key);
   }
 
   // get songs by playlist name
 
-  List<AudioModel> getSongs(playlistName)  {
+  List<AudioModel> getSongs(playlistName) {
     final List<AudioModel> audioModelSongs =
-         _allSongsBox!.get(playlistName)!.cast<AudioModel>();
+        _allSongsBox!.get(playlistName)!.cast<AudioModel>();
     return audioModelSongs;
   }
 
   // insert songs by playlist name
 
-   insertSongs(List<AudioModel> playlist, String playlistName) async {
+  insertSongs(List<AudioModel> playlist, String playlistName) async {
     await _allSongsBox!.put(playlistName, playlist);
     return true;
   }
 
   // converting Audio Model into Audio
   List<Audio> AudioModelToAudio(List<AudioModel> audioModelSongs) {
+    images.shuffle();
     List<Audio> audioSongs = audioModelSongs
         .map(
           (audioModel) => Audio.file(
@@ -58,16 +65,20 @@ class DatabaseFunctions {
                   type: ArtworkType.AUDIO,
                   id: audioModel.id!,
                   nullArtworkWidget: Container(
-                    color: Colors.blue,
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    
                     child: Image.asset(
-                      "assets/asset_image_2.jpeg",
+                      images[0],
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
               ),
               "id": audioModel.id,
-              "duration":audioModel.duration
+              "duration": audioModel.duration
             }),
           ),
         )
@@ -84,7 +95,7 @@ class DatabaseFunctions {
             album: audioModel.metas.album,
             title: audioModel.metas.title,
             id: audioModel.metas.extra!["id"],
-            duration:audioModel.metas.extra!["duration"]))
+            duration: audioModel.metas.extra!["duration"]))
         .toList();
   }
 
@@ -108,8 +119,7 @@ class DatabaseFunctions {
         album: audioModel.metas.album,
         title: audioModel.metas.title,
         id: audioModel.metas.extra!["id"],
-        duration: audioModel.metas.extra!["duration"]
-        );
+        duration: audioModel.metas.extra!["duration"]);
 
     // getting all songs in the playlist from database
 
@@ -132,11 +142,10 @@ class DatabaseFunctions {
       } else if (playlistName == "Recent Songs") {
         playlistSongs
             .removeWhere((element) => element.id == myAudioModelSong.id);
-            playlistSongs.add(myAudioModelSong);
+        playlistSongs.add(myAudioModelSong);
         await _allSongsBox!.put(playlistName, playlistSongs);
-        
       }
-      if (playlistName == "Favorites"){
+      if (playlistName == "Favorites") {
         Navigator.of(context!).pop();
       }
 
@@ -148,7 +157,7 @@ class DatabaseFunctions {
           album: audioModel.metas.album,
           title: audioModel.metas.title,
           id: audioModel.metas.extra!["id"],
-          duration : audioModel.metas.extra!["duration"]));
+          duration: audioModel.metas.extra!["duration"]));
       await _allSongsBox!.put(playlistName, playlistSongs);
 
       // confirms the playlist name is not Recent Songs so that we can avoid
@@ -163,11 +172,9 @@ class DatabaseFunctions {
       // avoids the screen popping issue when we add song to favorites from the
       // playing screen as welll as when adding song to Recent songs from now playing screen
 
-      if(playlistName != "Recent Songs"){
-       Navigator.of(context!).pop();
+      if (playlistName != "Recent Songs") {
+        Navigator.of(context!).pop();
       }
-        
-      
     }
 
     print(await _allSongsBox!.get(playlistName));
@@ -239,18 +246,15 @@ class DatabaseFunctions {
             ));
     print("show dialogue");
   }
-   
-    deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel, String playlistName) async {
-    List<AudioModel> myAudioModelSongs =
-        audioToMyAudioModel(audioModelSongs);
+
+  deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel,
+      String playlistName) async {
+    List<AudioModel> myAudioModelSongs = audioToMyAudioModel(audioModelSongs);
     myAudioModelSongs
         .removeWhere((element) => element.id == audioModel.metas.extra!['id']);
-  await  insertSongs(myAudioModelSongs, playlistName);
-  return true;
-    
-    
+    await insertSongs(myAudioModelSongs, playlistName);
+    return true;
   }
-
 
   void addToFavorites(
       {Audio? audioModel, String? playlistName, BuildContext? context}) async {
@@ -263,8 +267,7 @@ class DatabaseFunctions {
         album: audioModel.metas.album,
         title: audioModel.metas.title,
         id: audioModel.metas.extra!["id"],
-        duration: audioModel.metas.extra!["duration"]
-        );
+        duration: audioModel.metas.extra!["duration"]);
 
     // getting all songs in the playlist from database
 
@@ -287,9 +290,8 @@ class DatabaseFunctions {
       } else if (playlistName == "Recent Songs") {
         playlistSongs
             .removeWhere((element) => element.id == myAudioModelSong.id);
-            playlistSongs.add(myAudioModelSong);
+        playlistSongs.add(myAudioModelSong);
         await _allSongsBox!.put(playlistName, playlistSongs);
-        
       }
 
       //  if song is not existent in playlist we simply add the song to list
@@ -300,34 +302,26 @@ class DatabaseFunctions {
           album: audioModel.metas.album,
           title: audioModel.metas.title,
           id: audioModel.metas.extra!["id"],
-          duration : audioModel.metas.extra!["duration"]));
+          duration: audioModel.metas.extra!["duration"]));
       await _allSongsBox!.put(playlistName, playlistSongs);
 
       // confirms the playlist name is not Recent Songs so that we can avoid
       // showing snackbar to every song added to the Recent songs
       //
-      
-      }
 
-      // avoids the screen popping issue when we add song to favorites from the
-      // playing screen as welll as when adding song to Recent songs from now playing screen
-
-      
-       
-      
     }
 
-
-     deleteFromPlaylistFromPlaylistScreen( Audio audioModel, String playlistName) async {
-       List<AudioModel> myAudioModelSongs = getSongs(playlistName);
-    
-    myAudioModelSongs
-        .removeWhere((element) => element.id == audioModel.metas.extra!['id']);
-  await  insertSongs(myAudioModelSongs, playlistName);
-  return true;
-    
-    
+    // avoids the screen popping issue when we add song to favorites from the
+    // playing screen as welll as when adding song to Recent songs from now playing screen
   }
 
-}
+  deleteFromPlaylistFromPlaylistScreen(
+      Audio audioModel, String playlistName) async {
+    List<AudioModel> myAudioModelSongs = getSongs(playlistName);
 
+    myAudioModelSongs
+        .removeWhere((element) => element.id == audioModel.metas.extra!['id']);
+    await insertSongs(myAudioModelSongs, playlistName);
+    return true;
+  }
+}
