@@ -52,7 +52,7 @@ class _FavoriteTogglingState extends State<FavoriteToggling> {
 
     return 
     assetsAudioPlayer.builderCurrent(builder: (context,playing){
-      print("vivek");
+    
       
     widget.audioModel=  find(widget.audioSongs, playing.audio.assetAudioPath);
     decideColor();

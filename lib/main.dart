@@ -19,7 +19,8 @@ import 'package:v_music_player/widgets/bottom_control_other_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Directory dir = await getApplicationDocumentsDirectory();
   SharedPreferences? prefs = await SharedPreferences.getInstance();
   String path = dir.path;
@@ -37,11 +38,7 @@ void main() async {
     await prefs.setBool("tile view", false);
     await prefs.setInt("duration", 0);
     notifications = prefs.getBool("notifications");
-    print(notifications);
-  } else
-    print(keys);
-
-  if (keys.contains("Recent Songs")) {
+  } else if (keys.contains("Recent Songs")) {
     List<AudioModel> recentSongs = db.getSongs("Recent Songs");
     if (recentSongs.length > 0) {
       recentSongs = recentSongs.reversed.toList();
@@ -97,6 +94,7 @@ class _MyAppState extends State<MyApp> {
       await Permission.storage.request();
     }
     songs = await audio!.querySongs();
+    print(songs[0].uri);
 
     audioModelSongs = songs
         .map((songModel) => AudioModel(
@@ -126,7 +124,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print("build started");
+    double width = MediaQuery.of(context).size.width;
+
     List<Widget> bottomNavScreens = [
       HomeScreen(audioSongsList, widget.prefs),
       SearchScreen(),
@@ -182,28 +181,34 @@ class _MyAppState extends State<MyApp> {
                   backgroundColor: ColorsForApp.dark,
                   icon: Icon(
                     FontAwesomeIcons.home,
+                    size: width < 600 ? 18 : 32,
                   ),
                   title: Text(
                     "Home",
-                    style: TextStyle(color: Colors.white),
+                    style:
+                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
                   )),
               BottomNavigationBarItem(
                   backgroundColor: ColorsForApp.dark,
                   icon: Icon(
                     FontAwesomeIcons.search,
+                    size: width < 600 ? 18 : 32,
                   ),
                   title: Text(
                     "Search",
-                    style: TextStyle(color: Colors.white),
+                    style:
+                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
                   )),
               BottomNavigationBarItem(
                   backgroundColor: ColorsForApp.dark,
                   icon: Icon(
                     Icons.library_music,
+                    size: width < 600 ? 18 : 32,
                   ),
                   title: Text(
                     "Library",
-                    style: TextStyle(color: Colors.white),
+                    style:
+                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
                   )),
             ],
           ),

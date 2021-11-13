@@ -8,7 +8,7 @@ import 'package:v_music_player/style/style.dart';
 
 class Player{
   
-   AssetsAudioPlayer? assetsAudioPlayer = AssetsAudioPlayer.withId("0");
+   AssetsAudioPlayer _assetsAudioPlayer = AssetsAudioPlayer.withId("0");
    DatabaseFunctions db = DatabaseFunctions.getDatabase();
   
    Player.getAudioPlayer();
@@ -21,14 +21,18 @@ class Player{
      }
      return _player!;
    }
+
+   AssetsAudioPlayer getAssetsAudio(){
+     return _assetsAudioPlayer;
+   }
    
 
   void openPlaylistInPlayer({int? index,List <Audio>? audioModelSongs, BuildContext? context, Audio? audioModel,String? playlistName,Function? setStateOfTheScreen}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool notifications = prefs.getBool("notifications")!;
-    // getsongs();  
+ 
 try{
-    await assetsAudioPlayer!.open(
+    await _assetsAudioPlayer.open(
         Playlist(
           audios: audioModelSongs,
           startIndex: index!,
@@ -70,15 +74,15 @@ try{
   }
 
   void playNext() async{
-   await assetsAudioPlayer!.next();
+   await _assetsAudioPlayer.next();
   }
 
   void playPrevious() async{
-   await assetsAudioPlayer!.previous();
+   await _assetsAudioPlayer.previous();
   }
 
   void pauseCurrent() async{
-   await assetsAudioPlayer!.pause();
+   await _assetsAudioPlayer.pause();
   }
   
 
@@ -89,7 +93,7 @@ try{
     int duration = prefs.getInt("duration")!;
     // getsongs();  
 try{
-    await assetsAudioPlayer!.open(
+    await _assetsAudioPlayer.open(
         Playlist(
           audios: audioModelSongs,
           startIndex: index!,

@@ -41,7 +41,7 @@ class _AlbumSongsScreenState extends State<AlbumSongsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsForApp.dark ,
-      appBar: CustomAppBar.customAppBar(widget.albumName),
+      appBar: CustomAppBar.customAppBar(widget.albumName,context),
       body:  GridView.count(
                   crossAxisCount: 1,
                   childAspectRatio: 5.5,

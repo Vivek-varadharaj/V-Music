@@ -22,7 +22,6 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
   List<AudioModel>? audioModelSongs;
   List<Audio>? audioSongs = [];
   void getSongs() {
-    print(widget.playlistName);
     audioModelSongs = db.getSongs(widget.playlistName);
     audioSongs = db.AudioModelToAudio(audioModelSongs!);
     if (widget.playlistName == "Recent Songs") {
@@ -33,21 +32,24 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
     setState(() {});
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     getSongs();
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar(widget.playlistName),
+      appBar: CustomAppBar.customAppBar(widget.playlistName, context),
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: audioSongs!.length > 0
-              ? ListView(
-                  children: [
-                widget.playlistName !="Favorites" &&   widget.playlistName !="Recent Songs" && widget.playlistName !="All Songs" ? AddIndividulSongsToPlaylist( getSongs, widget.playlistName):Container(),
-                    ...audioSongs!
+              ? ListView(children: [
+                  widget.playlistName != "Favorites" &&
+                          widget.playlistName != "Recent Songs" &&
+                          widget.playlistName != "All Songs"
+                      ? AddIndividulSongsToPlaylist(
+                          getSongs, widget.playlistName)
+                      : Container(),
+                  ...audioSongs!
                       .map(
                         (audioSong) => PlaylistSongTile(
                           audioSong,
@@ -57,18 +59,25 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
                           getSongs,
                         ),
                       )
-                      .toList()])
+                      .toList()
+                ])
               : Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    widget.playlistName !="Favorites" &&   widget.playlistName !="Recent Songs" && widget.playlistName !="All Songs" ? AddIndividulSongsToPlaylist( getSongs, widget.playlistName):Container(),
-                    
+                    widget.playlistName != "Favorites" &&
+                            widget.playlistName != "Recent Songs" &&
+                            widget.playlistName != "All Songs"
+                        ? AddIndividulSongsToPlaylist(
+                            getSongs, widget.playlistName)
+                        : Container(),
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(40.0),
                         child: Text(
                           "No Songs Yet!!!",
-                          style: StyleForApp.heading,
+                          style: width < 600
+                              ? StyleForApp.heading
+                              : StyleForApp.headingLarge,
                         ),
                       ),
                     ),

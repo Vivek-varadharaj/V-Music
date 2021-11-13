@@ -7,7 +7,7 @@ import 'package:v_music_player/data_base/audio_model.dart';
 import 'package:v_music_player/data_base/database_functions.dart';
 import 'package:v_music_player/screens/screen_now_playing.dart';
 import 'package:v_music_player/style/style.dart';
-import 'dart:io';
+
 
 // ignore: must_be_immutable
 class RecentSongTile extends StatelessWidget {
@@ -26,7 +26,7 @@ class RecentSongTile extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Container(
-      height: 50,
+      height: width< 600 ? 65 :95,
       padding: const EdgeInsets.all(1.5),
       child: GestureDetector(
         onTap:() async{
@@ -81,7 +81,7 @@ class RecentSongTile extends StatelessWidget {
                     height: 60,
                     color:Colors.transparent,
                     width: 40,
-                    child: Icon(FontAwesomeIcons.ellipsisV,color: Colors.white,size: 18,)),
+                    child: Icon(FontAwesomeIcons.ellipsisV,color: Colors.white,size: width < 600 ? 18 :28,)),
                 ),
               )
             ],
@@ -94,8 +94,8 @@ class RecentSongTile extends StatelessWidget {
   Future<bool> isItAvailable()async{
     
     
-    File a = File(audioModelSongs![index!].path);
-    print("awaiting ${ await a.exists()}");
+   
+   
     List<AudioModel> allSongs =  await db.getSongs("All Songs");
     List<AudioModel> theSong = allSongs.where((element) => element.path==audioModelSongs![index!].path).toList();
     if(theSong.length>0){

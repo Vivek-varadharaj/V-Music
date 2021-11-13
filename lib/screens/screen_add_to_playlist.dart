@@ -25,7 +25,7 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
     playlistNames =  allSongsBox.keys.toList().cast<String>();
     playlistNames =
         playlistNames!.where((element) => element != "Favorites" && element !="All Songs" && element != "Recent Songs").toList();
-    print(playlistNames);
+ 
     setState(() {});
   }
 
@@ -41,7 +41,7 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
     
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Add to playlist"),
+      appBar: CustomAppBar.customAppBar("Add to playlist",context),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:  playlistNames!.length>0 ?  ListView(

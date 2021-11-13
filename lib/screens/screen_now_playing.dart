@@ -40,12 +40,13 @@ class _NowPlayingState extends State<NowPlaying> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Now Playing"),
+      appBar: CustomAppBar.customAppBar("Now Playing",context),
       body: Padding(
         padding:
           width < 600 ?  const EdgeInsets.only(top: 8.0, left: 20, right: 20, bottom: 24) : EdgeInsets.only(top: 16.0, left: 40, right: 40, bottom: 48),
         child: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
           nowPlaying = find(widget.audioModelSongs, playing.audio.assetAudioPath);
+          int currentIndex = widget.audioModelSongs.indexOf(nowPlaying!);
           db.addToPlaylist(audioModel: nowPlaying, context: context, playlistName: "Recent Songs");//inserting the song to Recent Songs playlist
           
           return Container(
@@ -136,7 +137,7 @@ class _NowPlayingState extends State<NowPlaying> {
                     );
                   },
                 ),
-                BottomControlPannel(),
+                BottomControlPannel(currentIndex),
               ],
             ),
           );

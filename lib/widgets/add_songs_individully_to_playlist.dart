@@ -13,6 +13,7 @@ class AddIndividulSongsToPlaylist extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: (){
           Navigator.push(
@@ -24,13 +25,13 @@ class AddIndividulSongsToPlaylist extends StatelessWidget {
       },
       child: Container(
        
-        height: 60,
+        height: width< 600 ?  60 : 100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
            Text(
               "Add or Remove Songs ",
-              style: StyleForApp.tileDisc,
+              style:width < 600 ? StyleForApp.tileDisc : StyleForApp.tileDiscLarge,
             ) ,
             Icon(
               Icons.add,

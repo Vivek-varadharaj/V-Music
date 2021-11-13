@@ -82,7 +82,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                     children: [
                                       GestureDetector(
                                         onTap: () {
-                                          assetsAudioPlayer.previous();
+                                         assetsAudioPlayer.previous();
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(left: 10),
@@ -127,6 +127,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                       }),
                                       GestureDetector(
                                         onTap: () {
+                                          assetsAudioPlayer.stop();
                                           assetsAudioPlayer.next();
                                         },
                                         child: Container(
@@ -155,11 +156,13 @@ class BottomControlForOtherScreens extends StatelessWidget {
           : Container();
     });
   }
-
+//  int? currentIndex;
   Audio? currentPlaying;
   void find(String path) {
     if (audioSongsList.length != 0)
       currentPlaying =
           audioSongsList.firstWhere((element) => element.path == path);
+ 
   }
+  
 }

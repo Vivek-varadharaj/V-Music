@@ -177,7 +177,7 @@ class DatabaseFunctions {
       }
     }
 
-    print(await _allSongsBox!.get(playlistName));
+    
   }
 
   bool isExists(playlistSongs, myAudioModelSong) {
@@ -244,7 +244,7 @@ class DatabaseFunctions {
                 ],
               ),
             ));
-    print("show dialogue");
+    
   }
 
   deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel,

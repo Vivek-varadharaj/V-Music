@@ -1,3 +1,5 @@
+
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:v_music_player/data_base/audio_model.dart';
@@ -45,7 +47,7 @@ class _LibraryState extends State<Library> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Library"),
+      appBar: CustomAppBar.customAppBar("Library",context),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
         child: GridView.count(

@@ -54,7 +54,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                 child: NowPlaying(widget.audioModelSongs, widget.index)));
         
         
-        print("Navigated to Screen Now Playing");
+      
       },
       child: Container(
         margin: EdgeInsets.only(top: 10),
@@ -64,7 +64,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
             blurRadius: 6,
           )
         ]),
-        height: 95,
+        height:  width < 600 ? 65 : 95,
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Row(
@@ -144,7 +144,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                       child: Icon(
                         FontAwesomeIcons.ellipsisV,
                         color: Colors.white,
-                        size: 18,
+                        size: width < 600 ? 18 : 28,
                       ),
                     ),
                   )),
@@ -160,8 +160,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
   void getSongs() {
     //function for getting the song from widget top class to beneath
     audioModel = widget.audioModel;
-    print(audioModel);
-    print(audioModel!.metas.extra!["image"]);
+
   }
 
   void deleteFromPlaylist() {

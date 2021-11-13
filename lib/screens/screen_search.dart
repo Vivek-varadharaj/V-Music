@@ -26,9 +26,9 @@ class _SearchScreenState extends State<SearchScreen> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Search"),
+      appBar: CustomAppBar.customAppBar("Search",context),
       body: Padding(
-        padding: width <600 ? EdgeInsets.only(top :8.0,left: 8,right: 8,) :  EdgeInsets.only(top :16.0,left: 16,right: 8,) ,
+        padding: width <600 ? EdgeInsets.only(top :8.0,left: 8,right: 8,) :  EdgeInsets.only(top :16.0,left: 60,right: 60,) ,
         child: ListView(
           children: [
             Padding(

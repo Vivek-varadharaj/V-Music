@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:v_music_player/screens/screen_album_songs.dart';
 
@@ -63,9 +64,10 @@ class AlbumTile extends StatelessWidget {
               child: Text(
             albumName,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
               color: ColorsForApp.golden,
+             
             ),
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,

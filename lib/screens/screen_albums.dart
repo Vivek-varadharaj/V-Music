@@ -6,8 +6,6 @@ import 'package:v_music_player/widgets/album_tile.dart';
 import 'package:v_music_player/widgets/app_bar.dart';
 
 class AlbumScreen extends StatefulWidget {
-  
-
   @override
   State<AlbumScreen> createState() => _AlbumScreenState();
 }
@@ -20,7 +18,7 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   void getAlbumModels() async {
     albums = await audio.queryAlbums();
-    print(albums!.length);
+
     setState(() {});
   }
 
@@ -34,15 +32,17 @@ class _AlbumScreenState extends State<AlbumScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Albums"),
+      appBar: CustomAppBar.customAppBar("Albums", context),
       body: Container(
         padding: const EdgeInsets.all(15.0),
         child: GridView.count(
           crossAxisCount: 2,
           children: [
-           ...albums!.map((e) => AlbumTile(e.album,e.numOfSongs,albums!.indexOf(e))).toList(),
+            ...albums!
+                .map(
+                    (e) => AlbumTile(e.album, e.numOfSongs, albums!.indexOf(e)))
+                .toList(),
           ],
-         
         ),
       ),
     );

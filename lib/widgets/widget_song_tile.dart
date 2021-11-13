@@ -42,9 +42,8 @@ class _SongTileState extends State<SongTile> {
             context,
             PageTransition(
                 duration: Duration(milliseconds: 500),
-                type: PageTransitionType.fade,
+                type: PageTransitionType.bottomToTop,
                 child: NowPlaying(widget.audioModelSongs, widget.index)));
-        print("Navigated to Screen Now Playing");
       },
       child: Padding(
         padding: const EdgeInsets.all(4.0),
@@ -68,19 +67,17 @@ class _SongTileState extends State<SongTile> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        widget.audioModel.metas.title!,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: width <600 ? StyleForApp.tileDisc:  StyleForApp.tileDiscLarge
-                      ),
+                      child: Text(widget.audioModel.metas.title!,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: width < 600
+                              ? StyleForApp.tileDisc
+                              : StyleForApp.tileDiscLarge),
                     ),
                     GestureDetector(
-                      onTap: ()  {
+                      onTap: () {
                         db.addToPlaylistOrFavorites(
                             context: context, audioModel: widget.audioModel);
-                            
-                        print("show dialogue");
                       },
                       child: Container(
                         color: Colors.transparent,
@@ -107,7 +104,9 @@ class _SongTileState extends State<SongTile> {
                         widget.audioModel.metas.album!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style:width <600 ? StyleForApp.tileDisc    : StyleForApp.tileDiscLarge,
+                        style: width < 600
+                            ? StyleForApp.tileDisc
+                            : StyleForApp.tileDiscLarge,
                       ),
                     ),
                   ],

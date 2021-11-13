@@ -1,8 +1,11 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:v_music_player/style/style.dart';
 
 class CustomAppBar {
-  static AppBar customAppBar(title) {
+  static AppBar customAppBar(title,context) {
+    double width = MediaQuery.of(context).size.width;
     return AppBar(
       elevation: 2,
       shadowColor: ColorsForApp.golden,
@@ -10,7 +13,7 @@ class CustomAppBar {
       backgroundColor: ColorsForApp.light,
       title: Text(
         title,
-        style: StyleForApp.heading,
+        style: width<600 ? StyleForApp.heading : StyleForApp.headingLarge,
       ),
       
     );

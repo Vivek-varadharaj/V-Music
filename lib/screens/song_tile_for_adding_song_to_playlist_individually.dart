@@ -32,12 +32,13 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     getSongs();
     bool decide = decideIcon();
     return GestureDetector(
       onTap: decide
           ? () async {
-              print("true worked");
+              
               db.addToFavorites(
                   audioModel: widget.audioModel,
                   playlistName: widget.playlistName,
@@ -46,10 +47,10 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
               setState(() {});
               
 
-              print("Navigated to Screen Now Playing");
+              
             }
           : () async {
-              print("false worked");
+            
              await db.deleteFromPlaylistFromPlaylistScreen(
                   widget.audioModel, widget.playlistName);
                  widget.setStateOfPlaylistScreen();
@@ -69,7 +70,7 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
             blurRadius: 6,
           )
         ]),
-        height: 65,
+        height: width <600 ?  65 : 100,
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Row(
@@ -79,7 +80,7 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
                   clipBehavior: Clip.hardEdge,
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(10)),
-                  width: 60,
+                  width: width < 600 ?60 : 100,
                   child:
                       Center(child: widget.audioModel.metas.extra!["image"])),
               Expanded(
@@ -90,7 +91,7 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
                     widget.audioModel.metas.title!,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: StyleForApp.tileDisc,
+                    style: width < 600 ?  StyleForApp.tileDisc : StyleForApp.tileDiscLarge,
                   ),
                 ),
               ),
@@ -107,7 +108,7 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
   void getSongs() {
     
     playlistSongs = db.getSongs(widget.playlistName);
-    print(playlistSongs.length);
+    
    audioSongsInPlaylist  = db.AudioModelToAudio(playlistSongs);
   }
 

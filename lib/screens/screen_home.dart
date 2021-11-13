@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
               DrawerHeader(
                 child: Text(
                   "V Music",
-                  style: StyleForApp.heading,
+                  style: width <600 ?StyleForApp.heading: StyleForApp.headingLarge,
                 ),
                 padding: EdgeInsets.all(40),
               ),
@@ -206,16 +206,16 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: ColorsForApp.light,
         title: Text(
           "V Music",
-          style: StyleForApp.heading,
+          style: width <600 ? StyleForApp.heading : StyleForApp.headingLarge,
         ),
         actions: [
           Center(
               child: Text(
             "List View",
-            style: TextStyle(color: Colors.white, fontSize: 10),
+            style: width <600?  TextStyle(color: Colors.white, fontSize: 10) : StyleForApp.heading,
           )),
           Transform.scale(
-            scale: 0.5,
+            scale: width < 600 ? 0.5 : 1,
             child: Switch(
                 inactiveThumbColor: ColorsForApp.golden,
                 activeColor: ColorsForApp.golden,

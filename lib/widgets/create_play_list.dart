@@ -30,6 +30,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -70,13 +71,13 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
         );
       },
       child: Container(
-        height: 60,
+        height: width < 600 ? 60 : 100,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               "Create New Playlist",
-              style: StyleForApp.tileDisc,
+              style:  width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
             ),
             Icon(
               Icons.add,
@@ -110,7 +111,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
       await allSongsBox!.put(newPlaylistName, newPlaylist);
       
       widget.setStateOfPlaylistScreen();
-      print(await allSongsBox!.values.cast<List<AudioModel>>());
+      
       final snackBar = SnackBar(
           content: Text("New playlist named '${_controller.text}' added."));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
