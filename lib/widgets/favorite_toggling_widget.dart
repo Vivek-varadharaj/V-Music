@@ -48,6 +48,7 @@ class _FavoriteTogglingState extends State<FavoriteToggling> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
 
     return 
     assetsAudioPlayer.builderCurrent(builder: (context,playing){
@@ -71,7 +72,9 @@ class _FavoriteTogglingState extends State<FavoriteToggling> {
         });
       },
       child: Icon(FontAwesomeIcons.heart,
-          color: isFavorite ? Colors.red : Colors.white),
+          color: isFavorite ? Colors.red : Colors.white,  
+          size: width< 600 ? 22 :32,),
+        
     );
     });
     

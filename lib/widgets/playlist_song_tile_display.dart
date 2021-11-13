@@ -11,6 +11,7 @@ import 'package:v_music_player/screens/screen_now_playing.dart';
 import 'package:v_music_player/style/style.dart';
 
 class PlaylistSongTile extends StatefulWidget {
+
   final Audio audioModel;
   final List<Audio> audioModelSongs;
   final index;
@@ -39,6 +40,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () async {
        
@@ -62,7 +64,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
             blurRadius: 6,
           )
         ]),
-        height: 65,
+        height: 95,
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Row(
@@ -82,7 +84,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                     widget.audioModel.metas.title!,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: StyleForApp.tileDisc,
+                    style: width < 600 ?StyleForApp.tileDisc :StyleForApp.tileDiscLarge ,
                   ),
                 ),
               ),

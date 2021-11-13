@@ -37,12 +37,13 @@ class _NowPlayingState extends State<NowPlaying> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar("Now Playing"),
       body: Padding(
         padding:
-            const EdgeInsets.only(top: 8.0, left: 20, right: 20, bottom: 24),
+          width < 600 ?  const EdgeInsets.only(top: 8.0, left: 20, right: 20, bottom: 24) : EdgeInsets.only(top: 16.0, left: 40, right: 40, bottom: 48),
         child: assetsAudioPlayer.builderCurrent(builder: (context, playing) {
           nowPlaying = find(widget.audioModelSongs, playing.audio.assetAudioPath);
           db.addToPlaylist(audioModel: nowPlaying, context: context, playlistName: "Recent Songs");//inserting the song to Recent Songs playlist
@@ -65,7 +66,7 @@ class _NowPlayingState extends State<NowPlaying> {
                               nowPlaying!.metas.title!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: StyleForApp.heading,
+                              style: width< 600 ?  StyleForApp.heading : StyleForApp.headingLarge,
                             ),
                           ),
                         ),
@@ -100,7 +101,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       child: Container(
 
                         padding: EdgeInsets.all(8),
-                        height: MediaQuery.of(context).size.height * 0.1,
+                        height:  MediaQuery.of(context).size.height * 0.1,
                         decoration: BoxDecoration(
                           color: ColorsForApp.dark,
                           boxShadow: [BoxShadow(
@@ -122,7 +123,7 @@ class _NowPlayingState extends State<NowPlaying> {
                                         horizontal: 30.0),
                                     child: Text(
                                       nowPlaying.metas.title!,
-                                      style: StyleForApp.heading,
+                                      style: width <600 ? StyleForApp.heading : StyleForApp.headingLarge,
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),

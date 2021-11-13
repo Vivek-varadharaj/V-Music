@@ -12,6 +12,7 @@ import 'dart:io';
 // ignore: must_be_immutable
 class RecentSongTile extends StatelessWidget {
   
+  
   String? playlistName;
  final Audio? audioModel;
   List <Audio>? audioModelSongs=[];
@@ -23,6 +24,7 @@ class RecentSongTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
       height: 50,
       padding: const EdgeInsets.all(1.5),
@@ -43,7 +45,7 @@ class RecentSongTile extends StatelessWidget {
         }
         ,
         child: Container(
-          padding: EdgeInsets.only(left: 4,top: 4,bottom: 4),
+          padding:  EdgeInsets.only(left: 4,top: 4,bottom: 4),
           decoration: BoxDecoration(
             color: Colors.black,
             boxShadow: [BoxShadow(
@@ -59,14 +61,14 @@ class RecentSongTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                width: 60,
+                width: width < 600 ? 60 : 100,
                 child: audioModel!.metas.extra!["image"],
               ),
               Expanded(
                 flex: 3,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal:15.0),
-                  child: Text(audioModel!.metas.title!,overflow: TextOverflow.ellipsis,style: StyleForApp.tileDisc,),
+                  child: Text(audioModel!.metas.title!,overflow: TextOverflow.ellipsis,style: width < 600  ? StyleForApp.tileDisc : StyleForApp.tileDiscLarge,),
                 ),
               ),
               Expanded(

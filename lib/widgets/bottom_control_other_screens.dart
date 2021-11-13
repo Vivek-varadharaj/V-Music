@@ -16,13 +16,14 @@ class BottomControlForOtherScreens extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return assetsAudioPlayer.builderCurrent(builder: (context, playing) {
       find(playing.audio.assetAudioPath);
       return currentPlaying != null
           ? Container(
               padding: EdgeInsets.only(top: 10),
               color: Colors.black,
-              width: MediaQuery.of(context).size.width,
+              width: width,
               child: Column(
                 children: [
                   GestureDetector(
@@ -39,16 +40,15 @@ class BottomControlForOtherScreens extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: ColorsForApp.goldenLow,
                           borderRadius: BorderRadius.circular(10)),
-                      height: 60,
+                      height:  width < 600 ?60 : 100,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Center(
                             child: Container(
-                              padding: EdgeInsets.only(left: 4),
+                              padding: EdgeInsets.all( 8 ),
                               margin: EdgeInsets.only(right: 20),
-                              height: 50,
-                              width: 55,
+                              width: width< 600 ? 60 : 100,
                               child: currentPlaying!.metas.extra!["image"],
                             ),
                           ),
@@ -58,7 +58,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                               child: Container(
                                 child: Text(
                                   currentPlaying!.metas.title!,
-                                  style: StyleForApp.heading,
+                                  style: width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -70,8 +70,9 @@ class BottomControlForOtherScreens extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.25,
+                                    width: width < 600 ? MediaQuery.of(context).size.width *
+                                        0.25 : MediaQuery.of(context).size.width *
+                                        0.15  ,
                                     margin: EdgeInsets.only(
                                         right: 20, bottom: 2, left: 10),
                                     child: ProgressBarForSongs(
@@ -88,6 +89,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                           child: Icon(
                                             FontAwesomeIcons.stepBackward,
                                             color: Colors.white,
+                                            size:  width < 600 ? 22 : 32,
                                           ),
                                         ),
                                       ),
@@ -105,6 +107,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                                       FontAwesomeIcons
                                                           .pauseCircle,
                                                       color: Colors.white,
+                                                      size:  width < 600 ? 22 : 32,
                                                     )),
                                               )
                                             : GestureDetector(
@@ -117,6 +120,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                                   child: Icon(
                                                     FontAwesomeIcons.playCircle,
                                                     color: Colors.white,
+                                                    size:  width < 600 ? 22 : 32,
                                                   ),
                                                 ),
                                               );
@@ -131,6 +135,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                           child: Icon(
                                             FontAwesomeIcons.stepForward,
                                             color: Colors.white,
+                                            size:  width < 600 ? 22 : 32,
                                           ),
                                         ),
                                       ),

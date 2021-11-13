@@ -28,6 +28,7 @@ class _SongTileState extends State<SongTile> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () {
         assetsAudioPlayer.openPlaylistInPlayer(
@@ -71,7 +72,7 @@ class _SongTileState extends State<SongTile> {
                         widget.audioModel.metas.title!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: StyleForApp.tileDisc,
+                        style: width <600 ? StyleForApp.tileDisc:  StyleForApp.tileDiscLarge
                       ),
                     ),
                     GestureDetector(
@@ -106,7 +107,7 @@ class _SongTileState extends State<SongTile> {
                         widget.audioModel.metas.album!,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
-                        style: StyleForApp.tileDisc,
+                        style:width <600 ? StyleForApp.tileDisc    : StyleForApp.tileDiscLarge,
                       ),
                     ),
                   ],

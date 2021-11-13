@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       drawer: Drawer(
         child: Container(
@@ -237,9 +237,9 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(left: 15, top: 10, right: 15),
           child: switchTileView!
               ? GridView.count(
-                  crossAxisCount: 1,
+                  crossAxisCount:   1 ,
                   childAspectRatio: 5.5,
-                  mainAxisSpacing: 8,
+                  mainAxisSpacing: 8,crossAxisSpacing: 15,
                   children: [
                     ...widget.audioModelSongs
                         .map(

@@ -18,6 +18,16 @@ class StyleForApp{
     fontSize: 14,
   );
 
+    static TextStyle headingLarge = GoogleFonts.yanoneKaffeesatz(
+    color: Colors.white,
+    fontSize:28 
+  );
+  static TextStyle tileDiscLarge= GoogleFonts.lora(
+    color: Colors.white,
+    fontSize: 24,
+  );
+  
+
   static List<Color> darkColors =[
     Color(0xff400000),
     Color(0xff010029),

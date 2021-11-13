@@ -42,6 +42,7 @@ class _LibraryState extends State<Library> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar("Library"),
@@ -56,7 +57,7 @@ class _LibraryState extends State<Library> {
 
             Padding(
               padding: const EdgeInsets.only(left: 8.0, top: 40),
-              child: Text("Recent Songs", style: StyleForApp.tileDisc),
+              child: Text("Recent Songs", style: width< 600 ? StyleForApp.tileDisc : StyleForApp.tileDiscLarge),
             ),
 
            ... audioSongs.map(

@@ -19,7 +19,7 @@ import 'package:v_music_player/widgets/bottom_control_other_screens.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+ await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   Directory dir = await getApplicationDocumentsDirectory();
   SharedPreferences? prefs = await SharedPreferences.getInstance();
   String path = dir.path;

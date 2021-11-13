@@ -19,6 +19,7 @@ class PlaylistTile extends StatelessWidget {
   final String title;
   @override
   Widget build(BuildContext context) {
+    double width  = MediaQuery.of(context).size.width;
     controller.text=title;
     return GestureDetector(
       onTap: () {
@@ -33,7 +34,7 @@ class PlaylistTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),
         child: Container(
-          height: 60,
+          height:  width < 600 ? 60 : 80,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
@@ -53,7 +54,8 @@ class PlaylistTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Text(
                       title,
-                      style: StyleForApp.heading,
+                      style: width < 600 ? StyleForApp.heading : StyleForApp.headingLarge
+                      ,
                     ),
                   )),
               Padding(
@@ -66,6 +68,7 @@ class PlaylistTile extends StatelessWidget {
                         ? Icon(
                             FontAwesomeIcons.arrowAltCircleRight,
                             color: Colors.white,
+                            size:  width< 600 ?22 :32,
                           )
                         : Container()),
               ),

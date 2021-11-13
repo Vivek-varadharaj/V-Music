@@ -14,6 +14,7 @@ class MenuTile extends StatelessWidget {
  final String title;
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: (){
         if(title=="Playlists"){
@@ -48,9 +49,11 @@ class MenuTile extends StatelessWidget {
                   flex: 3,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal:25.0),
-                    child: Text(title,style: StyleForApp.heading,),
+                    child: Text(title,style: width<600 ? StyleForApp.heading : StyleForApp.headingLarge,),
                   )),
-               title !="Favorites" ? Icon(FontAwesomeIcons.arrowAltCircleRight,color: Colors.white,): Icon(FontAwesomeIcons.heart,color: Colors.red,)
+               title !="Favorites" ? Icon(FontAwesomeIcons.arrowAltCircleRight,color: Colors.white,size: width<600 ? 22:32,
+               
+               ): Icon(FontAwesomeIcons.heart,color: Colors.red,size: width<600 ? 22:32,)
             ],
              
            
