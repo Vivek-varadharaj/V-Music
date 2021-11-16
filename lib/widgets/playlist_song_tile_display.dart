@@ -49,7 +49,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
         Navigator.push(
             context,
             PageTransition(
-                duration: Duration(milliseconds: 500),
+                duration: Duration(milliseconds: 200),
                 type: PageTransitionType.fade,
                 child: NowPlaying(widget.audioModelSongs, widget.index)));
         
@@ -61,7 +61,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
         decoration: BoxDecoration(color: ColorsForApp.dark, boxShadow: [
           BoxShadow(
             color: ColorsForApp.golden.withOpacity(0.5),
-            blurRadius: 6,
+            blurRadius: 1,
           )
         ]),
         height:  width < 600 ? 65 : 95,

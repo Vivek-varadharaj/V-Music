@@ -42,20 +42,23 @@ class _AlbumSongsScreenState extends State<AlbumSongsScreen> {
     return Scaffold(
       backgroundColor: ColorsForApp.dark ,
       appBar: CustomAppBar.customAppBar(widget.albumName,context),
-      body:  GridView.count(
-                  crossAxisCount: 1,
-                  childAspectRatio: 5.5,
-                  mainAxisSpacing: 8,
-                  children: [
-          ...audioSongs.map(
-            (audioSong) => RecentSongTile(
-             audioModel: audioSong,
-             audioModelSongs: audioSongs,
-             index : audioSongs.indexOf(audioSong),
+      body:  Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: GridView.count(
+                    crossAxisCount: 1,
+                    childAspectRatio: 5.5,
+                    mainAxisSpacing: 8,
+                    children: [
+            ...audioSongs.map(
+              (audioSong) => RecentSongTile(
+               audioModel: audioSong,
+               audioModelSongs: audioSongs,
+               index : audioSongs.indexOf(audioSong),
+              ),
             ),
-          ),
-          Container(),
-        ],
+            Container(),
+          ],
+        ),
       ),
     );
   }

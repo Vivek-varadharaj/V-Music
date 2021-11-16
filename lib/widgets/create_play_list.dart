@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:v_music_player/data_base/audio_model.dart';
@@ -27,6 +29,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
   // }
 
   TextEditingController _controller = TextEditingController();
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +64,13 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
                       primary: Colors.black,
                     ),
                     onPressed: () {
-                      putIt(context);
+                    if  (_timer!=null ) {
+                          _timer!.cancel();
+                      }
+                      _timer = Timer(Duration(milliseconds: 300), (){
+                         putIt(context);
+                      });
+                      
                      
                     },
                     child: Text("Add")),

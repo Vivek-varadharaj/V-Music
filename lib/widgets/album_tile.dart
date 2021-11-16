@@ -49,6 +49,9 @@ class AlbumTile extends StatelessWidget {
         child: Container(
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage("assets/album_image.jpg")),
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -56,23 +59,33 @@ class AlbumTile extends StatelessWidget {
                 blurRadius: 2,
               ),
             ],
-            color: index<StyleForApp.darkColors.length ? StyleForApp.darkColors[index] : shufflingColors[0],
+            // color: index<StyleForApp.darkColors.length ? StyleForApp.darkColors[index] : shufflingColors[0],
           ),
           height: 100,
           width: 100,
           child: Center(
-              child: Text(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                
+                decoration: BoxDecoration(
+                  color: ColorsForApp.goldenLow,
+                  borderRadius: BorderRadius.circular(6)
+                ),
+                child: Text(
             albumName,
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: ColorsForApp.golden,
+                
+               
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
              
             ),
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             maxLines: 2,
-          )),
+          ),
+              )),
         ),
       ),
     );

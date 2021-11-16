@@ -19,7 +19,7 @@ class AddIndividulSongsToPlaylist extends StatelessWidget {
           Navigator.push(
             context,
             PageTransition(
-                duration: Duration(milliseconds: 500),
+                duration: Duration(milliseconds: 200),
                 type: PageTransitionType.fade,
                 child: ScreenAddingIndividualSongsToPlaylist(setStateOfScreen,playlistName)));
       },

@@ -23,16 +23,21 @@ class _NowPlayingState extends State<NowPlaying> {
 
   Audio? nowPlaying;
   SharedPreferences? prefs;
+  int? last;
 
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId("0");
  void getPreferences() async{
    prefs  = await SharedPreferences.getInstance();
+   setState(() {
+     
+   });
     
  }
  @override
   void initState() {
     super.initState();
     getPreferences();
+    last = widget.audioModelSongs.length-1;
   }
 
   @override
@@ -81,7 +86,7 @@ class _NowPlayingState extends State<NowPlaying> {
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
                         color: Colors.yellow,
-                        blurRadius: 4,
+                        blurRadius: 1,
                       )
                     ]),
                     width: MediaQuery.of(context).size.width * 0.6,
@@ -104,10 +109,11 @@ class _NowPlayingState extends State<NowPlaying> {
                         padding: EdgeInsets.all(8),
                         height:  MediaQuery.of(context).size.height * 0.1,
                         decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
                           color: ColorsForApp.dark,
                           boxShadow: [BoxShadow(
                             color: ColorsForApp.golden,
-                            blurRadius: 4,
+                            blurRadius: 1,
                           )]
                         ),
                         child: Center(
@@ -137,7 +143,7 @@ class _NowPlayingState extends State<NowPlaying> {
                     );
                   },
                 ),
-                BottomControlPannel(currentIndex),
+                BottomControlPannel(currentIndex, last!, prefs),
               ],
             ),
           );

@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,15 +20,24 @@ class AddToPlaylistTile extends StatelessWidget {
   AudioModel? myAudioModelSong;
   final String playlistName;
   AddToPlaylistTile(this.audioModel, this.playlistName);
+  Timer? _timer;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        db.addToPlaylist(
-            audioModel: audioModel,
-            playlistName: playlistName,
-            context: context);
+        {
+          if (_timer != null) {
+            _timer!.cancel();
+          }
+          _timer = Timer(Duration(milliseconds: 300), () {
+            db.addToPlaylist(
+                audioModel: audioModel,
+                playlistName: playlistName,
+                context: context);
+          });
+        }
+        ;
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8),

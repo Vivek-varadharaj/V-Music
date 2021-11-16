@@ -84,7 +84,11 @@ class _SearchScreenState extends State<SearchScreen> {
                   audioModel: audioSong,
                   audioModelSongs: audioSongs,
                   index: audioSongs.indexOf(audioSong),
-                ))
+                )),
+                Container(
+                  height: 100,
+                  color: Colors.black,
+                ),
           ],
         ),
       ),

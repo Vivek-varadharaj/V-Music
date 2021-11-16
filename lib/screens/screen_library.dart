@@ -71,6 +71,10 @@ class _LibraryState extends State<Library> {
                setStateOfTheScreen: getRecentSongs,
               ),
             ),
+            Container(
+                  height: 100,
+                  color: Colors.black,
+                ),
             // ...
           ],
         ),

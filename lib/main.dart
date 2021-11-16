@@ -24,6 +24,7 @@ void main() async {
   Directory dir = await getApplicationDocumentsDirectory();
   SharedPreferences? prefs = await SharedPreferences.getInstance();
   String path = dir.path;
+   List<AudioModel> recentSongs = [];
   bool? notifications;
   Hive.init(path);
   Hive.registerAdapter(AudioModelAdapter());
@@ -32,11 +33,14 @@ void main() async {
   List<dynamic> keys = db.getKeys();
   Player player = Player.getAudioPlayer();
   if (keys.isEmpty) {
+     
+     await db.insertSongs(recentSongs, "Recent Songs");
     await prefs.setBool("notifications", true);
-    await prefs.setBool("loop", false);
-    await prefs.setBool("shuffle", false);
+    // await prefs.setBool("loop", false);
+    // await prefs.setBool("shuffle", false);
     await prefs.setBool("tile view", false);
     await prefs.setInt("duration", 0);
+    
     notifications = prefs.getBool("notifications");
   } else if (keys.contains("Recent Songs")) {
     List<AudioModel> recentSongs = db.getSongs("Recent Songs");
@@ -75,7 +79,7 @@ class _MyAppState extends State<MyApp> {
   List<AudioModel> audioModelSongs = [];
   List<AudioModel> audioModelSongs1 = [];
   List<AudioModel> favorites = [];
-  List<AudioModel> recentSongs = [];
+ 
   Box<List<dynamic>>? allSongsBox;
   List<Audio> audioSongsList = [];
   DatabaseFunctions db = DatabaseFunctions.getDatabase();
@@ -83,13 +87,14 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     // allSongsBox = Hive.box("allSongsBox");
-
+    
     super.initState();
     audio = OnAudioQuery();
     getSongs();
+   
   }
 
-  void getSongs() async {
+  Future <bool> getSongs() async {
     if (await Permission.storage.status.isDenied) {
       await Permission.storage.request();
     }
@@ -111,15 +116,16 @@ class _MyAppState extends State<MyApp> {
 
     if (keys.contains("Favorites")) {
     } else
-      db.insertSongs(favorites, "Favorites");
+     await db.insertSongs(favorites, "Favorites");
 
-    if (keys.contains("Recent Songs")) {
-    } else
-      db.insertSongs(recentSongs, "Recent Songs");
+    
 
     audioSongsList = db.AudioModelToAudio(audioModelSongs1);
-
-    setState(() {});
+    setState(() {
+      
+    });
+ return true;
+    
   }
 
   @override
@@ -134,6 +140,7 @@ class _MyAppState extends State<MyApp> {
 
     return WillPopScope(
       onWillPop: () async {
+        
         showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -186,7 +193,7 @@ class _MyAppState extends State<MyApp> {
                   title: Text(
                     "Home",
                     style:
-                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
+                        width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
                   )),
               BottomNavigationBarItem(
                   backgroundColor: ColorsForApp.dark,
@@ -197,7 +204,7 @@ class _MyAppState extends State<MyApp> {
                   title: Text(
                     "Search",
                     style:
-                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
+                        width < 600 ? StyleForApp.tileDisc: StyleForApp.headingLarge,
                   )),
               BottomNavigationBarItem(
                   backgroundColor: ColorsForApp.dark,
@@ -208,7 +215,7 @@ class _MyAppState extends State<MyApp> {
                   title: Text(
                     "Library",
                     style:
-                        width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
+                        width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
                   )),
             ],
           ),

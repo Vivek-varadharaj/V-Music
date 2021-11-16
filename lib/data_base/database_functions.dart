@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -192,6 +194,7 @@ class DatabaseFunctions {
     } else
       return false;
   }
+  Timer? _timer;
 
   // show dialogue function for adding to playlist and favorites
   // this shows a dialog box when user taps on the elipsis icon
@@ -227,10 +230,21 @@ class DatabaseFunctions {
                   ),
                   ListTile(
                     onTap: () {
-                      addToPlaylist(
+
+                      {
+                    if  (_timer!=null ) {
+                          _timer!.cancel();
+                      }
+                      _timer = Timer(Duration(milliseconds: 300), (){
+                          addToPlaylist(
                           context: context,
                           playlistName: "Favorites",
                           audioModel: audioModel);
+                      });
+                      
+                     
+                    };
+                     
                     },
                     title: Text(
                       "Add to Favorites",

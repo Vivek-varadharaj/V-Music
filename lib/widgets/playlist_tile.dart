@@ -26,7 +26,8 @@ class PlaylistTile extends StatelessWidget {
         Navigator.push(
             context,
             PageTransition(
-                type: PageTransitionType.fade,
+              duration: Duration(milliseconds: 200),
+                type: PageTransitionType.leftToRight,
                 child: PlaylistSongsScreen(
                     title))); //Actually we will be passing the entire song list model here
       },

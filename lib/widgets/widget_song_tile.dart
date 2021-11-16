@@ -41,7 +41,7 @@ class _SongTileState extends State<SongTile> {
         Navigator.push(
             context,
             PageTransition(
-                duration: Duration(milliseconds: 500),
+                duration: Duration(milliseconds: 200),
                 type: PageTransitionType.bottomToTop,
                 child: NowPlaying(widget.audioModelSongs, widget.index)));
       },
@@ -52,7 +52,7 @@ class _SongTileState extends State<SongTile> {
           width: 150,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
-              boxShadow: [BoxShadow(color: Colors.yellow, blurRadius: 2)],
+              boxShadow: [BoxShadow(color: ColorsForApp.goldenLow, blurRadius: 1)],
               color: ColorsForApp.light,
               borderRadius: BorderRadius.circular(10)),
           child: Column(

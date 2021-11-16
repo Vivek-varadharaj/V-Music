@@ -13,12 +13,15 @@ class BottomControlForOtherScreens extends StatelessWidget {
   final List<Audio> audioSongsList;
   final AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer.withId("0");
   BottomControlForOtherScreens(this.audioSongsList);
+  bool prevDone = true;
+  bool nextDone = true;
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return assetsAudioPlayer.builderCurrent(builder: (context, playing) {
       find(playing.audio.assetAudioPath);
+
       return currentPlaying != null
           ? Container(
               padding: EdgeInsets.only(top: 10),
@@ -31,7 +34,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                       Navigator.push(
                           context,
                           PageTransition(
-                              duration: Duration(milliseconds: 500),
+                              duration: Duration(milliseconds: 200),
                               type: PageTransitionType.fade,
                               child: NowPlaying(audioSongsList, 0)));
                     },
@@ -40,15 +43,15 @@ class BottomControlForOtherScreens extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: ColorsForApp.goldenLow,
                           borderRadius: BorderRadius.circular(10)),
-                      height:  width < 600 ?60 : 100,
+                      height: width < 600 ? 60 : 100,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Center(
                             child: Container(
-                              padding: EdgeInsets.all( 8 ),
+                              padding: EdgeInsets.all(8),
                               margin: EdgeInsets.only(right: 20),
-                              width: width< 600 ? 60 : 100,
+                              width: width < 600 ? 60 : 100,
                               child: currentPlaying!.metas.extra!["image"],
                             ),
                           ),
@@ -58,7 +61,9 @@ class BottomControlForOtherScreens extends StatelessWidget {
                               child: Container(
                                 child: Text(
                                   currentPlaying!.metas.title!,
-                                  style: width < 600 ? StyleForApp.heading : StyleForApp.headingLarge,
+                                  style: width < 600
+                                      ? StyleForApp.heading
+                                      : StyleForApp.headingLarge,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -70,9 +75,11 @@ class BottomControlForOtherScreens extends StatelessWidget {
                               child: Column(
                                 children: [
                                   Container(
-                                    width: width < 600 ? MediaQuery.of(context).size.width *
-                                        0.25 : MediaQuery.of(context).size.width *
-                                        0.15  ,
+                                    width: width < 600
+                                        ? MediaQuery.of(context).size.width *
+                                            0.25
+                                        : MediaQuery.of(context).size.width *
+                                            0.15,
                                     margin: EdgeInsets.only(
                                         right: 20, bottom: 2, left: 10),
                                     child: ProgressBarForSongs(
@@ -81,15 +88,19 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                   Row(
                                     children: [
                                       GestureDetector(
-                                        onTap: () {
-                                         assetsAudioPlayer.previous();
+                                        onTap: () async {
+                                          if (prevDone) {
+                                            prevDone = false;
+                                            await assetsAudioPlayer.previous();
+                                            prevDone = true;
+                                          }
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(left: 10),
                                           child: Icon(
                                             FontAwesomeIcons.stepBackward,
                                             color: Colors.white,
-                                            size:  width < 600 ? 22 : 32,
+                                            size: width < 600 ? 22 : 32,
                                           ),
                                         ),
                                       ),
@@ -107,7 +118,8 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                                       FontAwesomeIcons
                                                           .pauseCircle,
                                                       color: Colors.white,
-                                                      size:  width < 600 ? 22 : 32,
+                                                      size:
+                                                          width < 600 ? 22 : 32,
                                                     )),
                                               )
                                             : GestureDetector(
@@ -120,15 +132,18 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                                   child: Icon(
                                                     FontAwesomeIcons.playCircle,
                                                     color: Colors.white,
-                                                    size:  width < 600 ? 22 : 32,
+                                                    size: width < 600 ? 22 : 32,
                                                   ),
                                                 ),
                                               );
                                       }),
                                       GestureDetector(
-                                        onTap: () {
-                                          assetsAudioPlayer.stop();
-                                          assetsAudioPlayer.next();
+                                        onTap: () async {
+                                          if (nextDone) {
+                                            nextDone = false;
+                                            await assetsAudioPlayer.next();
+                                            nextDone = true;
+                                          }
                                         },
                                         child: Container(
                                           margin: EdgeInsets.only(
@@ -136,7 +151,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
                                           child: Icon(
                                             FontAwesomeIcons.stepForward,
                                             color: Colors.white,
-                                            size:  width < 600 ? 22 : 32,
+                                            size: width < 600 ? 22 : 32,
                                           ),
                                         ),
                                       ),
@@ -156,13 +171,12 @@ class BottomControlForOtherScreens extends StatelessWidget {
           : Container();
     });
   }
+
 //  int? currentIndex;
   Audio? currentPlaying;
   void find(String path) {
     if (audioSongsList.length != 0)
       currentPlaying =
           audioSongsList.firstWhere((element) => element.path == path);
- 
   }
-  
 }

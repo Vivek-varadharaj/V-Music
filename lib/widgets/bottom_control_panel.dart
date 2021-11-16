@@ -9,19 +9,23 @@ import 'package:v_music_player/style/style.dart';
 
 class BottomControlPannel extends StatefulWidget {
   int index;
-  BottomControlPannel(this.index);
+  int last;
+
+  SharedPreferences? prefs;
+  BottomControlPannel(this.index, this.last, this.prefs);
   @override
   _BottomControlPannelState createState() => _BottomControlPannelState();
 }
 
 class _BottomControlPannelState extends State<BottomControlPannel> {
-  bool shuffled = false;
-  bool looped = false;
-  SharedPreferences? prefs;
+  bool? shuffled;
+  bool? looped;
+  bool prevDone = true;
+  bool nextDone = true;
+
   void getModePreference() async {
-    prefs = await SharedPreferences.getInstance();
-    looped = prefs!.getBool("loop")!;
-    shuffled = prefs!.getBool("shuffle")!;
+    looped = widget.prefs!.getBool("loop")!;
+    shuffled = widget.prefs!.getBool("shuffle")!;
   }
 
   Player player = Player();
@@ -29,8 +33,10 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
   AssetsAudioPlayer? assetsAudioPlayer;
   @override
   void initState() {
+    shuffled = false;
+    looped = false;
     super.initState();
-    getModePreference();
+
     assetsAudioPlayer = player.getAssetsAudio();
   }
 
@@ -44,7 +50,7 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
             boxShadow: [
               BoxShadow(
                 color: ColorsForApp.golden,
-                blurRadius: 2,
+                blurRadius: 0.5,
               )
             ],
             color: ColorsForApp.dark,
@@ -59,46 +65,53 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
           children: [
             GestureDetector(
                 onTap: () async {
-                  if (!looped) {
+                  if (!looped!) {
                     assetsAudioPlayer!.setLoopMode(LoopMode.single);
-                    prefs!.setBool("loop", true);
+
                     setState(() {
-                      getModePreference();
+                      looped = true;
                     });
                   } else {
                     assetsAudioPlayer!.setLoopMode(LoopMode.playlist);
-                    prefs!.setBool("loop", false);
+
                     setState(() {
-                      getModePreference();
+                      looped = false;
                     });
                   }
                 },
-                child: looped
-                    ? Icon(
-                        Icons.repeat_one,
-                        color: Colors.white,
+                child: assetsAudioPlayer!.loopMode.value == LoopMode.single
+                    ? Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(
+                          Icons.repeat_one,
+                          color: Colors.white,
+                        ),
                       )
-                    : Icon(
-                        Icons.repeat_one,
-                        color: Colors.grey,
+                    : Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(
+                          Icons.repeat_one,
+                          color: Colors.grey,
+                        ),
                       )),
             GestureDetector(
                 onTap: () async {
-                  if (_timer != null) {
-                   
-                    _timer!.cancel();
+                  if (prevDone) {
+                    prevDone = false;
+                    await assetsAudioPlayer!.previous();
+                    prevDone = true;
                   }
-
-                  _timer = Timer(Duration(milliseconds: 200), () {
-                    if(widget.index!=0)
-                    assetsAudioPlayer!.previous();
-                    else (){};
-                  });
                 },
-                child: Icon(
-                  FontAwesomeIcons.stepBackward,
-                  color: widget.index != 0 ? Colors.white : Colors.grey,
-                  size: 20,
+                child: Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: Icon(
+                    FontAwesomeIcons.stepBackward,
+                    color: widget.index != 0 ? Colors.white : Colors.grey,
+                    size: 20,
+                  ),
                 )),
             assetsAudioPlayer!.builderIsPlaying(
               builder: (context, playing) => playing
@@ -106,48 +119,71 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
                       onTap: () async {
                         await assetsAudioPlayer!.pause();
                       },
-                      child: Icon(FontAwesomeIcons.pause,
-                          color: Colors.white, size: 20))
+                      child: Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(FontAwesomeIcons.pause,
+                            color: Colors.white, size: 20),
+                      ))
                   : GestureDetector(
                       onTap: () async {
                         await assetsAudioPlayer!.play();
                       },
-                      child: Icon(FontAwesomeIcons.play,
-                          color: Colors.white, size: 20)),
+                      child: Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(FontAwesomeIcons.play,
+                            color: Colors.white, size: 20),
+                      )),
             ),
             GestureDetector(
                 onTap: () async {
-                  if (_timer != null) {
-                   
-                    _timer!.cancel();
-                  }
+                  if (nextDone) {
+                    if (widget.index != widget.last) {
+                      nextDone = false;
 
-                  _timer = Timer(Duration(milliseconds: 200), () {
-                    assetsAudioPlayer!.next();
-                  });
+                      await assetsAudioPlayer!.next(stopIfLast: true);
+                      nextDone = true;
+                    }
+                  }
                 },
-                child: Icon(FontAwesomeIcons.stepForward,
-                    color: Colors.white, size: 20)),
+                child: Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: Icon(FontAwesomeIcons.stepForward,
+                      color: widget.index != widget.last
+                          ? Colors.white
+                          : Colors.grey,
+                      size: 20),
+                )),
             GestureDetector(
                 onTap: () {
-                  if (!shuffled) {
-                    prefs!.setBool("shuffle", true);
+                  if (!shuffled!) {
+                    //  widget. prefs!.setBool("shuffle", true);
                     setState(() {
-                      getModePreference();
+                      shuffled = true;
                     });
                   } else {
-                    prefs!.setBool("shuffle", false);
+                    //  widget. prefs!.setBool("shuffle", false);
                     setState(() {
-                      getModePreference();
+                      shuffled = false;
                     });
                   }
-                assetsAudioPlayer!.toggleShuffle();
+                  assetsAudioPlayer!.toggleShuffle();
                 },
-                child: shuffled
-                    ? Icon(FontAwesomeIcons.random,
-                        color: Colors.white, size: 20)
-                    : Icon(FontAwesomeIcons.random,
-                        color: Colors.grey, size: 20)),
+                child: assetsAudioPlayer!.isShuffling.value
+                    ? Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(FontAwesomeIcons.random,
+                            color: Colors.white, size: 20),
+                      )
+                    : Container(
+                        color: Colors.transparent,
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Icon(FontAwesomeIcons.random,
+                            color: Colors.grey, size: 20),
+                      )),
           ],
         ),
       );
