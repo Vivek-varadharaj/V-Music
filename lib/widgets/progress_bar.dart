@@ -32,14 +32,14 @@ class ProgressBarForSongs extends StatelessWidget {
               onSeek: (newPosition) {
                 assetsAudioPlayer.seek(newPosition);
               },
-              timeLabelTextStyle: TextStyle(color: ColorsForApp.golden),
-              progressBarColor: ColorsForApp.golden.withOpacity(0.8),
+              timeLabelTextStyle: TextStyle(color: Colors.white),
+              progressBarColor: Colors.white.withOpacity(0.8),
               barCapShape: BarCapShape.square,
-              thumbGlowColor: ColorsForApp.golden,
+              thumbGlowColor: Colors.white,
               thumbRadius: 6,
               thumbGlowRadius: 8,
-              thumbColor: ColorsForApp.golden,
-              baseBarColor: ColorsForApp.golden.withOpacity(0.3),
+              thumbColor: Colors.white,
+              baseBarColor: Colors.white.withOpacity(0.3),
               timeLabelLocation:
                   label ? TimeLabelLocation.below : TimeLabelLocation.none),
         );

@@ -37,15 +37,7 @@ class PlaylistTile extends StatelessWidget {
         child: Container(
           height:  width < 600 ? 60 : 80,
           padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                  color: ColorsForApp.golden,
-                  blurRadius: 2,
-                )
-              ]),
+         
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -81,49 +73,66 @@ class PlaylistTile extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             showDialog(context: context, builder: (context)=>
-                            AlertDialog(
-                              backgroundColor: ColorsForApp.goldenLow,
-                              actionsAlignment: MainAxisAlignment.center,
-                              title: TextFormField(
-                                cursorColor: Colors.white,
+                            Container(
+                               decoration: BoxDecoration(
+                                 color: Colors.black,
+              gradient: LinearGradient( 
+                tileMode: TileMode.repeated,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black, Colors.black87, Colors.black54, Colors.black87, Colors.black ]
+              ),
+            ),
+                              child: AlertDialog(
+                                backgroundColor: Colors.black,
+                                actionsAlignment: MainAxisAlignment.center,
+                                title: TextFormField(
+                                  cursorColor: Colors.white,
                   style: StyleForApp.tileDisc,
                   decoration: InputDecoration(
                     
                     focusedBorder:OutlineInputBorder(
                           borderSide: BorderSide(
-                    color: ColorsForApp.golden.withOpacity(0.5),
+                    color: Colors.white,
                   ),) ,
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
-                    color: ColorsForApp.golden.withOpacity(0.5),
-                  ),),),
-                                controller: controller,
-                                onChanged: (value){
-                                 
-                                },
-                                
-                              ),
-                              actions: [
-                                ElevatedButton(onPressed: () async{
-                                  List<AudioModel> audioModelSongs = db.getSongs(title);
-                                  String keyword = controller.text;
-                                bool isItUnique = await isUnique(keyword);
-                                  if(controller.text!="" && isItUnique){
-                                    db.deleteKey(title);
-                                     db.insertSongs(audioModelSongs, controller.text);
+                    color: Colors.white,
+                  ),),
+                  enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        )
+                  ),
+                                  controller: controller,
+                                  onChanged: (value){
+                                   
+                                  },
                                   
-                                  setStateOfPlaylistScreen();
-                                  Navigator.of(context).pop();
-                                  }else{
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Playlist name empty or it already exists")));
-                                  }
-                                 
-                                }, child: Text("Confirm"),
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.black
                                 ),
-                                )
-                              ],
+                                actions: [
+                                  ElevatedButton(onPressed: () async{
+                                    List<AudioModel> audioModelSongs = db.getSongs(title);
+                                    String keyword = controller.text;
+                                  bool isItUnique = await isUnique(keyword);
+                                    if(controller.text!="" && isItUnique){
+                                      db.deleteKey(title);
+                                       db.insertSongs(audioModelSongs, controller.text);
+                                    
+                                    setStateOfPlaylistScreen();
+                                    Navigator.of(context).pop();
+                                    }else{
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Playlist name empty or it already exists")));
+                                    }
+                                   
+                                  }, child: Text("Confirm"),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.black
+                                  ),
+                                  )
+                                ],
+                              ),
                             )
                             );
                           },

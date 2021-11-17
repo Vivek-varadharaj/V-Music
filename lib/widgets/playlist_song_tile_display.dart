@@ -57,13 +57,9 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
       
       },
       child: Container(
+        
         margin: EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(color: ColorsForApp.dark, boxShadow: [
-          BoxShadow(
-            color: ColorsForApp.golden.withOpacity(0.5),
-            blurRadius: 1,
-          )
-        ]),
+        
         height:  width < 600 ? 65 : 95,
         child: Padding(
           padding: const EdgeInsets.all(4.0),
@@ -137,7 +133,7 @@ class _PlaylistSongTileState extends State<PlaylistSongTile> {
                     db.addToPlaylistOrFavorites(context: context, audioModel: audioModel );
                   },
                   child: Container(
-                    color: ColorsForApp.golden.withOpacity(0.2),
+                    color: Colors.transparent,
                     width: 40,
                     height: 60,
                     child: Center(

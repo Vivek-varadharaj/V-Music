@@ -38,11 +38,14 @@ void main() async {
     await prefs.setBool("notifications", true);
     // await prefs.setBool("loop", false);
     // await prefs.setBool("shuffle", false);
+    await prefs.setInt("theme", 1);
     await prefs.setBool("tile view", false);
     await prefs.setInt("duration", 0);
     
     notifications = prefs.getBool("notifications");
   } else if (keys.contains("Recent Songs")) {
+
+    
     List<AudioModel> recentSongs = db.getSongs("Recent Songs");
     if (recentSongs.length > 0) {
       recentSongs = recentSongs.reversed.toList();
@@ -55,6 +58,9 @@ void main() async {
       );
     }
   }
+
+ int theme = prefs.getInt("theme")!;
+ StyleForApp.setTheme(theme);
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
@@ -145,8 +151,8 @@ class _MyAppState extends State<MyApp> {
             context: context,
             builder: (context) => AlertDialog(
                   elevation: 20,
-                  backgroundColor: ColorsForApp.goldenLow,
-                  title: Text("Exit ?"),
+                  backgroundColor: ColorsForApp.dark,
+                  title: Text("Exit ?", style: StyleForApp.heading,),
                   content: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -156,77 +162,83 @@ class _MyAppState extends State<MyApp> {
                           onPressed: () {
                             SystemNavigator.pop();
                           },
-                          child: Text("Yes")),
+                          child: Text("Yes",style: StyleForApp.heading,)),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: ColorsForApp.dark),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("No")),
+                          child: Text("No",style: StyleForApp.heading,)),
                     ],
                   ),
                 ));
         return true;
       },
-      child: Scaffold(
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: ColorsForApp.golden,
-              blurRadius: 2,
-            )
-          ]),
-          child: BottomNavigationBar(
-            unselectedItemColor: Colors.white,
-            currentIndex: _selectedIndex,
-            selectedItemColor: ColorsForApp.golden,
-            onTap: _onItemTapped,
-            backgroundColor: ColorsForApp.dark,
-            items: [
-              BottomNavigationBarItem(
-                  backgroundColor: ColorsForApp.dark,
-                  icon: Icon(
-                    FontAwesomeIcons.home,
-                    size: width < 600 ? 18 : 32,
-                  ),
-                  title: Text(
-                    "Home",
-                    style:
-                        width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
-                  )),
-              BottomNavigationBarItem(
-                  backgroundColor: ColorsForApp.dark,
-                  icon: Icon(
-                    FontAwesomeIcons.search,
-                    size: width < 600 ? 18 : 32,
-                  ),
-                  title: Text(
-                    "Search",
-                    style:
-                        width < 600 ? StyleForApp.tileDisc: StyleForApp.headingLarge,
-                  )),
-              BottomNavigationBarItem(
-                  backgroundColor: ColorsForApp.dark,
-                  icon: Icon(
-                    Icons.library_music,
-                    size: width < 600 ? 18 : 32,
-                  ),
-                  title: Text(
-                    "Library",
-                    style:
-                        width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
-                  )),
-            ],
+      child: Container(
+        decoration: BoxDecoration(
+              gradient: LinearGradient( 
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black, Colors.black87, Colors.black54, Colors.black]
+              )
+            ),
+        child: Scaffold(
+          // backgroundColor: Colors.transparent,
+          bottomNavigationBar: Container(
+            
+            child: BottomNavigationBar(
+              elevation: 0,
+              unselectedItemColor: Colors.white,
+              currentIndex: _selectedIndex,
+              selectedItemColor: ColorsForApp.golden,
+              onTap: _onItemTapped,
+              backgroundColor: Colors.black,
+              items: [
+                BottomNavigationBarItem(
+                    // backgroundColor: ColorsForApp.dark,
+                    icon: Icon(
+                      FontAwesomeIcons.home,
+                      size: width < 600 ? 18 : 32,
+                    ),
+                    title: Text(
+                      "Home",
+                      style:
+                          width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
+                    )),
+                BottomNavigationBarItem(
+                    // backgroundColor: ColorsForApp.dark,
+                    icon: Icon(
+                      FontAwesomeIcons.search,
+                      size: width < 600 ? 18 : 32,
+                    ),
+                    title: Text(
+                      "Search",
+                      style:
+                          width < 600 ? StyleForApp.tileDisc: StyleForApp.headingLarge,
+                    )),
+                BottomNavigationBarItem(
+                    // backgroundColor: ColorsForApp.dark,
+                    icon: Icon(
+                      Icons.library_music,
+                      size: width < 600 ? 18 : 32,
+                    ),
+                    title: Text(
+                      "Library",
+                      style:
+                          width < 600 ? StyleForApp.tileDisc : StyleForApp.headingLarge,
+                    )),
+              ],
+            ),
           ),
+          body: Stack(children: [
+            bottomNavScreens.elementAt(_selectedIndex),
+            Positioned(
+                right: 0,
+                bottom: 0,
+                child: BottomControlForOtherScreens(audioSongsList)),
+          ]),
         ),
-        body: Stack(children: [
-          bottomNavScreens.elementAt(_selectedIndex),
-          Positioned(
-              right: 0,
-              bottom: 0,
-              child: BottomControlForOtherScreens(audioSongsList)),
-        ]),
       ),
     );
   }

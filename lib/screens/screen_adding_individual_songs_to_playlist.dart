@@ -36,61 +36,67 @@ class _ScreenAddingIndividualSongsToPlaylistState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsForApp.dark,
+      backgroundColor: Colors.transparent,
       appBar: CustomAppBar.customAppBar("Add Songs", context),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-            child: TextField(
-                controller: _controller,
-                style: StyleForApp.tileDisc,
-                decoration: InputDecoration(
-                  labelText: "Search",
-                  labelStyle: StyleForApp.tileDisc,
-                  suffixIcon: Icon(
-                    FontAwesomeIcons.search,
-                    color: ColorsForApp.golden.withOpacity(0.5),
+      body: Container(
+        padding: EdgeInsets.all(10),
+         decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
+            ),
+        child: ListView(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+              child: TextField(
+                  controller: _controller,
+                  style: StyleForApp.tileDisc,
+                  decoration: InputDecoration(
+                    labelText: "Search",
+                    labelStyle: StyleForApp.tileDisc,
+                    suffixIcon: Icon(
+                      FontAwesomeIcons.search,
+                      color: Colors.white,
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:Colors.white, width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white, width: 1),
+                    ),
                   ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                ),
-                onChanged: (keyword) async {
-                  if (_timer != null) {
-                    _timer!.cancel();
-                  }
+                  onChanged: (keyword) async {
+                    if (_timer != null) {
+                      _timer!.cancel();
+                    }
 
-                  List<AudioModel> myAudioModelSongs = db.getSongs("All Songs");
+                    List<AudioModel> myAudioModelSongs = db.getSongs("All Songs");
 
-                  _timer = Timer(Duration(seconds: 1), () {
-                    audioSongs = db.AudioModelToAudio(myAudioModelSongs);
-                    audioSongs = audioSongs
-                        .where((element) => element.metas.title!
-                            .toUpperCase()
-                            .startsWith(keyword.toUpperCase()))
-                        .toList();
-                    setState(() {
-                      audioSongs = audioSongs;
+                    _timer = Timer(Duration(seconds: 1), () {
+                      audioSongs = db.AudioModelToAudio(myAudioModelSongs);
+                      audioSongs = audioSongs
+                          .where((element) => element.metas.title!
+                              .toUpperCase()
+                              .startsWith(keyword.toUpperCase()))
+                          .toList();
+                      setState(() {
+                        audioSongs = audioSongs;
+                      });
                     });
-                  });
-                }),
-          ),
-          ...audioSongs.map((audioSong) => AddPlaylistSongsFromScreen(
-              widget.playlistName,
-              widget.setStateOfScreen,
-              audioSong,
-              audioSongs))
-        ],
+                  }),
+            ),
+            ...audioSongs.map((audioSong) => AddPlaylistSongsFromScreen(
+                widget.playlistName,
+                widget.setStateOfScreen,
+                audioSong,
+                audioSongs))
+          ],
+        ),
       ),
     );
   }

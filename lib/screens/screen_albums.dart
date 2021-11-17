@@ -30,19 +30,26 @@ class _AlbumScreenState extends State<AlbumScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Albums", context),
-      body: Container(
-        padding: const EdgeInsets.all(15.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          children: [
-            ...albums!
-                .map(
-                    (e) => AlbumTile(e.album, e.numOfSongs, albums!.indexOf(e)))
-                .toList(),
-          ],
+    return Container(
+      
+     
+      child: Scaffold(
+        // backgroundColor: Colors.black,
+        appBar: CustomAppBar.customAppBar("Albums", context),
+        body: Container(
+           decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
+            ),
+          padding: const EdgeInsets.all(15.0),
+          child: GridView.count(
+            crossAxisCount: 2,
+            children: [
+              ...albums!
+                  .map(
+                      (e) => AlbumTile(e.album, e.numOfSongs, albums!.indexOf(e)))
+                  .toList(),
+            ],
+          ),
         ),
       ),
     );

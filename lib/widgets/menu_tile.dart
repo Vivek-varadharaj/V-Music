@@ -12,8 +12,16 @@ class MenuTile extends StatelessWidget {
   
   MenuTile(this.title);
  final String title;
+ String? image;
   @override
   Widget build(BuildContext context) {
+   if( title == "Playlists" ){
+     image = "assets/playlist_image.jfif";
+   }else if(title == "Albums"){
+     image = "assets/album_image_1.png";
+   }else {
+     image = "assets/favorite.jpg";
+   }
     double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: (){
@@ -36,15 +44,13 @@ class MenuTile extends StatelessWidget {
           padding:EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
-            color: Colors.black,
-            boxShadow: [BoxShadow(
-              color: ColorsForApp.golden,
-              blurRadius: 2,
-            )]
+            // color: Colors.black,
+           
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              Image.asset(image!),
                 Expanded(
                   flex: 3,
                   child: Padding(

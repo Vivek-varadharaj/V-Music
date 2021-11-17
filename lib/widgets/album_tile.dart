@@ -46,46 +46,52 @@ class AlbumTile extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Container(
-          clipBehavior: Clip.hardEdge,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage("assets/album_image.jpg")),
-            borderRadius: BorderRadius.circular(8),
-            boxShadow: [
-              BoxShadow(
-                color: ColorsForApp.golden,
-                blurRadius: 2,
+        child: Column(
+          children: [
+            Container(
+              clipBehavior: Clip.hardEdge,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage("assets/album_image.jpg")),
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: ColorsForApp.golden,
+                    blurRadius: 2,
+                  ),
+                ],
+                // color: index<StyleForApp.darkColors.length ? StyleForApp.darkColors[index] : shufflingColors[0],
               ),
-            ],
-            // color: index<StyleForApp.darkColors.length ? StyleForApp.darkColors[index] : shufflingColors[0],
-          ),
-          height: 100,
-          width: 100,
-          child: Center(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                
-                decoration: BoxDecoration(
-                  color: ColorsForApp.goldenLow,
-                  borderRadius: BorderRadius.circular(6)
+              height: 120,
+              width: 120,
+
+             ),
+               Center(
+                  child: Container(
+                    padding: EdgeInsets.all(10),
+                    
+                    decoration: BoxDecoration(
+                      
+                      borderRadius: BorderRadius.circular(6)
+                    ),
+                    child: Text(
+                albumName,
+                style: TextStyle(
+                    
+                   
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                 
                 ),
-                child: Text(
-            albumName,
-            style: TextStyle(
-                
-               
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-             
-            ),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-          ),
-              )),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+              ),
+                  )),
+            
+          ],
         ),
       ),
     );

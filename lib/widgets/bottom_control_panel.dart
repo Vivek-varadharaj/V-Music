@@ -47,13 +47,8 @@ class _BottomControlPannelState extends State<BottomControlPannel> {
         builder: (context, currentPlaying) {
       return Container(
         decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: ColorsForApp.golden,
-                blurRadius: 0.5,
-              )
-            ],
-            color: ColorsForApp.dark,
+            
+            // color: ColorsForApp.dark,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),

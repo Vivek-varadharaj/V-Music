@@ -44,15 +44,7 @@ class AddToPlaylistTile extends StatelessWidget {
         child: Container(
           height: 60,
           padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.black,
-              boxShadow: [
-                BoxShadow(
-                  color: ColorsForApp.golden,
-                  blurRadius: 2,
-                )
-              ]),
+         
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [

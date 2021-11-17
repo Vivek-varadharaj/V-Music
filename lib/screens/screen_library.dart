@@ -46,10 +46,13 @@ class _LibraryState extends State<Library> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: ColorsForApp.dark,
+      backgroundColor: Colors.transparent,
       appBar: CustomAppBar.customAppBar("Library",context),
       body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+        decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
+            ),
+        padding: const EdgeInsets.only(top: 10.0, left: 20,right: 20,bottom: 60),
         child: GridView.count(
           crossAxisCount: 1,
           childAspectRatio: 5,
@@ -71,10 +74,7 @@ class _LibraryState extends State<Library> {
                setStateOfTheScreen: getRecentSongs,
               ),
             ),
-            Container(
-                  height: 100,
-                  color: Colors.black,
-                ),
+            
             // ...
           ],
         ),

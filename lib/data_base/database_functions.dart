@@ -14,9 +14,6 @@ import 'audio_model.dart';
 class DatabaseFunctions {
   final Box<List<dynamic>>? _allSongsBox = Hive.box("allSongsBox");
   List<String> images = [
-    "assets/asset_image_1.jfif",
-    "assets/asset_image_2.jpeg",
-    "assets/assets_image_3.jpg",
     "assets/asset_image_4.jpg",
   ];
 
@@ -71,7 +68,6 @@ class DatabaseFunctions {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    
                     child: Image.asset(
                       images[0],
                       fit: BoxFit.cover,
@@ -178,8 +174,6 @@ class DatabaseFunctions {
         Navigator.of(context!).pop();
       }
     }
-
-    
   }
 
   bool isExists(playlistSongs, myAudioModelSong) {
@@ -194,6 +188,7 @@ class DatabaseFunctions {
     } else
       return false;
   }
+
   Timer? _timer;
 
   // show dialogue function for adding to playlist and favorites
@@ -206,59 +201,60 @@ class DatabaseFunctions {
         context: context!,
         builder: (context) => AlertDialog(
               titlePadding: EdgeInsets.all(8),
-              backgroundColor: ColorsForApp.goldenLow,
-              title: Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).pop();
+              backgroundColor: Colors.transparent,
+              title: Container(
+                 decoration: BoxDecoration(
+              color:Colors.black
+            ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).pop();
 
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.fade,
-                              child: AddToPlaylistScreen(audioModel)));
-                    },
-                    title: Text(
-                      "Add to playlist",
-                      style: StyleForApp.tileDisc,
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.fade,
+                                child: AddToPlaylistScreen(audioModel)));
+                      },
+                      title: Text(
+                        "Add to playlist",
+                        style: StyleForApp.tileDisc,
+                      ),
+                      trailing: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
                     ),
-                    trailing: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                  ),
-                  ListTile(
-                    onTap: () {
-
-                      {
-                    if  (_timer!=null ) {
-                          _timer!.cancel();
-                      }
-                      _timer = Timer(Duration(milliseconds: 300), (){
-                          addToPlaylist(
-                          context: context,
-                          playlistName: "Favorites",
-                          audioModel: audioModel);
-                      });
-                      
-                     
-                    };
-                     
-                    },
-                    title: Text(
-                      "Add to Favorites",
-                      style: StyleForApp.tileDisc,
-                    ),
-                    trailing: Icon(
-                      FontAwesomeIcons.heart,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
+                    ListTile(
+                      onTap: () {
+                        {
+                          if (_timer != null) {
+                            _timer!.cancel();
+                          }
+                          _timer = Timer(Duration(milliseconds: 300), () {
+                            addToPlaylist(
+                                context: context,
+                                playlistName: "Favorites",
+                                audioModel: audioModel);
+                          });
+                        }
+                        ;
+                      },
+                      title: Text(
+                        "Add to Favorites",
+                        style: StyleForApp.tileDisc,
+                      ),
+                      trailing: Icon(
+                        FontAwesomeIcons.heart,
+                        color: Colors.white,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ));
-    
   }
 
   deleteFromPlaylist(List<Audio> audioModelSongs, Audio audioModel,

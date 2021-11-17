@@ -24,72 +24,78 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: ColorsForApp.dark,
-      appBar: CustomAppBar.customAppBar("Search",context),
-      body: Padding(
-        padding: width <600 ? EdgeInsets.only(top :8.0,left: 8,right: 8,) :  EdgeInsets.only(top :16.0,left: 60,right: 60,) ,
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric( vertical: 8),
-              child: TextField(
-                controller: _controller,
-                style: StyleForApp.tileDisc,
-                decoration: InputDecoration(
-                  labelText: "Search",
-                  labelStyle: StyleForApp.tileDisc,
-                  suffixIcon: Icon(
-                    FontAwesomeIcons.search,
-                    color: ColorsForApp.golden.withOpacity(0.5),
-                  ),
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5), width: 1),
-                  ),
-                ),
-                onChanged: (keyword) async {
-                  if (_timer != null) {
-                    _timer!.cancel();
-                  }
-
-                  List<AudioModel> myAudioModelSongs = db.getSongs("All Songs");
-
-                  _timer = Timer(Duration(seconds: 1), () {
-                    audioSongs = db.AudioModelToAudio(myAudioModelSongs);
-                    audioSongs = audioSongs
-                        .where((element) => element.metas.title!
-                            .toUpperCase()
-                            .startsWith(keyword.toUpperCase()))
-                        .toList();
-                    setState(() {
-                      if (keyword == "") {
-                        audioSongs = [];
-                      }
-                      audioSongs = audioSongs;
-                    });
-                  });
-                },
-              ),
+    return Container(
+     
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: CustomAppBar.customAppBar("Search",context),
+        body: Container(
+           decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
             ),
-            ...audioSongs.map((audioSong) => RecentSongTile(
-                  audioModel: audioSong,
-                  audioModelSongs: audioSongs,
-                  index: audioSongs.indexOf(audioSong),
-                )),
-                Container(
-                  height: 100,
-                  color: Colors.black,
+          padding: width <600 ? EdgeInsets.only(top :8.0,left: 8,right: 8,bottom: 60) :  EdgeInsets.only(top :16.0,left: 60,right: 60,) ,
+          child: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric( vertical: 8,horizontal: 20),
+                child: TextField(
+                  controller: _controller,
+                  style: StyleForApp.tileDisc,
+                  decoration: InputDecoration(
+                    labelText: "Search",
+                    labelStyle: StyleForApp.tileDisc,
+                    suffixIcon: Icon(
+                      FontAwesomeIcons.search,
+                      color: Colors.white,
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color:Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Colors.white.withOpacity(0.5), width: 1),
+                    ),
+                  ),
+                  onChanged: (keyword) async {
+                    if (_timer != null) {
+                      _timer!.cancel();
+                    }
+
+                    List<AudioModel> myAudioModelSongs = db.getSongs("All Songs");
+
+                    _timer = Timer(Duration(seconds: 1), () {
+                      audioSongs = db.AudioModelToAudio(myAudioModelSongs);
+                      audioSongs = audioSongs
+                          .where((element) => element.metas.title!
+                              .toUpperCase()
+                              .startsWith(keyword.toUpperCase()))
+                          .toList();
+                      setState(() {
+                        if (keyword == "") {
+                          audioSongs = [];
+                        }
+                        audioSongs = audioSongs;
+                      });
+                    });
+                  },
                 ),
-          ],
+              ),
+              ...audioSongs.map((audioSong) => RecentSongTile(
+                    audioModel: audioSong,
+                    audioModelSongs: audioSongs,
+                    index: audioSongs.indexOf(audioSong),
+                  )),
+                  Container(
+                    height: 100,
+                    color: Colors.transparent,
+                  ),
+            ],
+          ),
         ),
       ),
     );

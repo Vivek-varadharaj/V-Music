@@ -39,9 +39,12 @@ class _PlayListScreenState extends State<PlayListScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      backgroundColor: ColorsForApp.dark,
+      // backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar(widget.playlistName,context),
-      body: Padding(
+      body: Container(
+         decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
+            ),
         padding: const EdgeInsets.all(10.0),
         child: ListView(
           children:  [

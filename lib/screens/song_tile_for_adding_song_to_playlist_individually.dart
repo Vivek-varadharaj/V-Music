@@ -64,12 +64,7 @@ class _PlaylistSongTileState extends State<AddPlaylistSongsFromScreen> {
             },
       child: Container(
         margin: EdgeInsets.only(top: 10),
-        decoration: BoxDecoration(color: ColorsForApp.dark, boxShadow: [
-          BoxShadow(
-            color: ColorsForApp.golden.withOpacity(0.5),
-            blurRadius: 6,
-          )
-        ]),
+        
         height: width <600 ?  65 : 100,
         child: Padding(
           padding: const EdgeInsets.all(4.0),

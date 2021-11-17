@@ -39,42 +39,60 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            backgroundColor: ColorsForApp.goldenLow,
-            title: Column(
-              children: [
-                TextFormField(
-                  style: StyleForApp.tileDisc,
-                  cursorColor: Colors.white,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5),
+            backgroundColor: Colors.transparent,
+            title: Container(
+               decoration: BoxDecoration(
+              gradient: LinearGradient( 
+                tileMode: TileMode.repeated,
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Colors.black, Colors.black87, Colors.black54, Colors.black87, Colors.black ]
+              )
+            ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 18,right: 18,top:8),
+                    child: TextFormField(
+                      style: StyleForApp.tileDisc,
+                      cursorColor: Colors.white,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                          ),
+                        )
                       ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: ColorsForApp.golden.withOpacity(0.5),
-                      ),
+                      controller: _controller,
                     ),
                   ),
-                  controller: _controller,
-                ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                    ),
-                    onPressed: () {
-                    if  (_timer!=null ) {
-                          _timer!.cancel();
-                      }
-                      _timer = Timer(Duration(milliseconds: 300), (){
-                         putIt(context);
-                      });
-                      
-                     
-                    },
-                    child: Text("Add")),
-              ],
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.black,
+                      ),
+                      onPressed: () {
+                      if  (_timer!=null ) {
+                            _timer!.cancel();
+                        }
+                        _timer = Timer(Duration(milliseconds: 300), (){
+                           putIt(context);
+                        });
+                        
+                       
+                      },
+                      child: Text("Add")),
+                ],
+              ),
             ),
           ),
         );
@@ -131,7 +149,7 @@ class _CreatePlaylistState extends State<CreatePlaylist> {
       
       final snackBar = SnackBar(
           content:
-              Text("Playlist named '${_controller.text}' already exists."));
+              Text("Playlist name either exists or empty"));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
       
     }

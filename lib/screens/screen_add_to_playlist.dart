@@ -40,9 +40,12 @@ class _AddToPlaylistScreenState extends State<AddToPlaylistScreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      backgroundColor: ColorsForApp.dark,
+      // backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar("Add to playlist",context),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: StyleForApp.bodyTheme,
+        ),
         padding: const EdgeInsets.all(8.0),
         child:  playlistNames!.length>0 ?  ListView(
           children: [

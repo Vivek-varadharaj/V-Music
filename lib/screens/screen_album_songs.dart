@@ -40,9 +40,10 @@ class _AlbumSongsScreenState extends State<AlbumSongsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ColorsForApp.dark ,
+      // backgroundColor: ColorsForApp.dark ,
       appBar: CustomAppBar.customAppBar(widget.albumName,context),
-      body:  Padding(
+      body:  Container(
+        decoration: BoxDecoration(gradient: StyleForApp.bodyTheme,),
         padding: const EdgeInsets.all(10.0),
         child: GridView.count(
                     crossAxisCount: 1,

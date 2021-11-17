@@ -25,7 +25,7 @@ class BottomControlForOtherScreens extends StatelessWidget {
       return currentPlaying != null
           ? Container(
               padding: EdgeInsets.only(top: 10),
-              color: Colors.black,
+              // color: Colors.black,
               width: width,
               child: Column(
                 children: [
@@ -41,7 +41,8 @@ class BottomControlForOtherScreens extends StatelessWidget {
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                          color: ColorsForApp.goldenLow,
+                        
+                          // color: ColorsForApp.dark,
                           borderRadius: BorderRadius.circular(10)),
                       height: width < 600 ? 60 : 100,
                       child: Row(

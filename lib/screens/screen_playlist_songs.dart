@@ -37,12 +37,17 @@ class _PlaylistSongsScreenState extends State<PlaylistSongsScreen> {
     double width = MediaQuery.of(context).size.width;
     getSongs();
     return Scaffold(
-      backgroundColor: ColorsForApp.dark,
+      // backgroundColor: ColorsForApp.dark,
       appBar: CustomAppBar.customAppBar(widget.playlistName, context),
-      body: Padding(
+      body: Container(
+         decoration: BoxDecoration(
+              gradient: StyleForApp.bodyTheme,
+            ),
           padding: const EdgeInsets.symmetric(horizontal: 15.0),
           child: audioSongs!.length > 0
               ? ListView(children: [
+
+                
                   widget.playlistName != "Favorites" &&
                           widget.playlistName != "Recent Songs" &&
                           widget.playlistName != "All Songs"

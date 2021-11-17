@@ -50,11 +50,8 @@ class RecentSongTile extends StatelessWidget {
         },
         child: Container(
           padding: EdgeInsets.only(left: 4, top: 4, bottom: 4),
-          decoration: BoxDecoration(color: Colors.black, boxShadow: [
-            BoxShadow(
-              color: ColorsForApp.golden.withOpacity(0.5),
-              blurRadius: 1,
-            )
+          decoration: BoxDecoration( boxShadow: [
+            
           ]),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
